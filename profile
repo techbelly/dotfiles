@@ -1,19 +1,25 @@
 # MacPorts
+export GIT_HOME=/usr/local/git
+
 if [ -d /opt/local ]; then
   export PATH=/opt/local/bin:/opt/local/sbin:$PATH
 fi
-# Local MySQL
-if [ -d /usr/local/mysql/bin ]; then
-  export PATH=/usr/local/mysql/bin:$PATH
-fi
-# Local Gems
-export PATH=~/Applications/scripts:$PATH
+
 if [ -d  ~/.gem/ruby/1.8/bin ]; then
   export PATH=~/.gem/ruby/1.8/bin:$PATH
 fi
  
-export SVN_EDITOR='mate -w'
-export EDITOR='mate -w'
+if [ -d $GIT_HOME ]; then
+  export PATH=$GIT_HOME/bin:$PATH
+fi
+
+if [ -d /Applications/Textmate.app ]; then
+	export SVN_EDITOR='mate -w'
+	export EDITOR='mate -w'
+else
+	export SVN_EDITOR='vi'
+	export EDITOR='vi'
+fi
 
 export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad
@@ -42,8 +48,6 @@ extract ()
 
 export GREP_OPTIONS='--color=auto' GREP_COLOR='1;32'
 
-
-# Open a manpage in Preview, which can be saved to PDF
 pman()
 {
    man -t "${1}" | open -f -a /Applications/Preview.app
@@ -103,7 +107,7 @@ function prompt_func() {
 }
  
 PROMPT_COMMAND=prompt_func
- 
+
 if [ -f ~/.bash_aliases ]; then
   source ~/.bash_aliases
 fi
@@ -114,9 +118,13 @@ fi
  
 if [ -f /opt/local/etc/bash_completion ]; then
     . /opt/local/etc/bash_completion
-    source /opt/local/etc/bash_completion.d/git
+    
 fi
- 
+
+if [ -f $GIT_HOME/contrib/completion/git-completion.bash ]; then
+	. $GIT_HOME/contrib/completion/git-completion.bash
+fi
+
 
 SSH_COMPLETE=( $(cat ~/.ssh/known_hosts | cut -f 1 -d ' ' | sed -e s/,.*//g | uniq | egrep -v [0123456789]) )
 complete -o default -W "${SSH_COMPLETE[*]}" ssh
