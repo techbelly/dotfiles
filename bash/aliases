@@ -72,3 +72,4 @@ alias techbelly='ssh beerscope@www.techbelly.com'
 
 alias lsock='sudo /usr/sbin/lsof -i -P'
 
+alias dsrm="find . -type f -name .DS_Store -print0 | xargs -0 rm"
