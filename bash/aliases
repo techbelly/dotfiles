@@ -20,10 +20,35 @@ extract ()
     fi
 }
 
-pman()
-{
-   man -t "${1}" | open -f -a /Applications/Preview.app
-}
+pman() { man -t "${1}" | open -f -a /Applications/Preview.app; }
 
 # http://www.macosxhints.com/article.php?story=20060502160527780&query=terminal%2Btitle
 function settitle() { echo -ne "\e]2;$@\a\e]1;$@\a"; }
+
+# cd
+alias ..='cd ..'
+
+# ls
+alias ls="ls -F"
+alias l="ls -lAh"
+alias ll="ls -l"
+alias la='ls -A'
+
+# git
+alias gl='git pull'
+alias gp='git push'
+alias gd='git diff'
+alias gc='git commit'
+alias gca='git commit -a'
+alias gco='git checkout'
+alias gb='git branch'
+alias gs='git status'
+alias grm="git status | grep deleted | awk '{print \$3}' | xargs git rm"
+
+# rails
+alias sc='script/console'
+alias ss='script/server'
+alias tlog='tail -f log/development.log'
+alias migrate='rake db:migrate db:test:clone'
+
+alias techbelly='ssh beerscope@www.techbelly.com'
