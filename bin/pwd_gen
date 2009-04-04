@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ $# -lt 1 ]; then
+    scriptname=`basename $0`
+    echo "Usage: $scriptname password_length"
+    exit
+fi
+
+jot -r -c 200 33 122 | sed 's/[^[:alnum:]]//' | rs -g 0 $1 | head

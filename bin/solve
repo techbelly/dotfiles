@@ -1,0 +1,3 @@
+#!/bin/bash
+
+echo `grep -w $1 /usr/share/dict/words`

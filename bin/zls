@@ -1,0 +1,48 @@
+#!/bin/sh
+
+# listjar
+# This script recursively lists the files inside a ZIP, JAR, EAR, or WAR file
+# It uses 'jar' to expand the files in temporary directories (<filename>.tmp)
+# so requires some time and disk space, but it cleans up after itself
+#
+# Cameron Hayne (macdev@hayne.net)  Feb 2004
+
+if [ $# -lt 1 ]; then
+    scriptname=`basename $0`
+    echo "Usage: $scriptname jarfile"
+    exit
+fi
+
+list_jar()
+{
+    local jarfile=$1
+    local our_dir=`pwd`
+
+    local prefix="$jarfile"
+    if [ $# -eq 2 ]; then
+        prefix="$2/$prefix"
+    fi
+
+    local tmpdir="$jarfile.tmp"
+    mkdir "$tmpdir"
+    cd "$tmpdir"
+
+    jar xf "$our_dir/$jarfile"
+
+    for file in `jar tf "$our_dir/$jarfile"`
+    do
+        echo "$prefix/$file"
+
+        case "$file" in
+        *.zip)  list_jar "$file" "$prefix" ;;
+        *.jar)  list_jar "$file" "$prefix" ;;
+        *.ear)  list_jar "$file" "$prefix" ;;
+        *.war)  list_jar "$file" "$prefix" ;;
+        esac
+    done
+
+    cd "$our_dir"
+    /bin/rm -rf "$tmpdir"
+}
+
+list_jar "$1"

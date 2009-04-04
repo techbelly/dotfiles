@@ -4,6 +4,10 @@ if [ -d /opt/local ]; then
   export PATH=/opt/local/bin:/opt/local/sbin:$PATH
 fi
 
+if [ -d $HOME/bin ]; then
+  export PATH=$HOME/bin:$PATH
+fi
+
 if [ -d  ~/.gem/ruby/1.8/bin ]; then
   export PATH=~/.gem/ruby/1.8/bin:$PATH
 fi
