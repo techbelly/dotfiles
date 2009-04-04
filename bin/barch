@@ -1,0 +1,78 @@
+#!/usr/bin/env ruby
+
+# This is a nifty little script designed to be used as a pager in the mysql
+# command line client - it draws bar graphs that are piss-easy to copy and
+# paste into emails.
+#
+# Watch and learn, folks - this script needs to be somewhere on your PATH.
+#
+# mysql> select * FROM languages;
+# +----------+-------+
+# | language | users |
+# +----------+-------+
+# | Ruby     |   200 | 
+# | Java     |   100 | 
+# | Fortran  |    30 | 
+# | C#       |     3 | 
+# +----------+-------+
+# 4 rows in set (0.00 sec)
+# 
+# mysql> \P barch
+# PAGER set to 'barch'
+# mysql> select * FROM languages;
+# 
+# Ruby    ❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚ (200/60.06%)
+# Java    ❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚ (100/30.03%)
+# Fortran ❚❚❚❚❚❚ (30/9.01%)
+# C#       (3/0.90%)
+# 
+# 4 rows in set (0.00 sec)
+# 
+# mysql> \n
+# PAGER set to stdout
+# mysql> 
+
+
+
+require 'rubygems'
+require 'facets/dictionary'
+
+mysql_table_row = %r{\|\s*([^\|\s]*)\s*\|\s*([^\|\s]*)\s*\|}
+
+histogram = Dictionary.new(0)
+
+found_header = false
+ARGF.each do |line|
+  data_or_header =  line.match mysql_table_row
+  next unless data_or_header
+  unless found_header
+    found_header = true
+  else
+    category, value = data_or_header[1],data_or_header[2].to_f
+    histogram[category] = histogram[category] + value
+  end
+end
+
+max_label_len = histogram.keys.map {|x| x.size }.max
+max_value = histogram.values.max
+total_value = histogram.values.inject(0) {|i,j| i+j }
+
+format = "%-#{max_label_len}s %s (%d/%.2f%%)\n"
+
+print "\n"
+sum_so_far = 0
+quartile = 0.25
+histogram.each do |category,value|
+	scaledentry = (value / max_value) * 40
+	stars = "❚" * scaledentry
+	percent = (value/total_value)*100
+	
+	printf(format,category,stars,value,percent)
+	
+	sum_so_far += value
+	if sum_so_far > total_value * quartile  then
+		print "---------#{100 * quartile}%-------\n"
+		quartile += 0.25
+	end
+end
+print "\n"
