@@ -1,0 +1,15 @@
+# set editor
+if [ -d /Applications/Textmate.app ]; then
+	export SVN_EDITOR='mate -w'
+	export EDITOR='mate -w'
+else
+	export SVN_EDITOR='vi'
+	export EDITOR='vi'
+fi
+
+export CLICOLOR=1
+export LSCOLORS=ExFxCxDxBxegedabagacad
+
+export GIT_HOME=/usr/local/git
+
+export GREP_OPTIONS='--color=auto' GREP_COLOR='1;32'

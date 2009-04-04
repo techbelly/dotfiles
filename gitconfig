@@ -3,3 +3,17 @@
 	email = bengriffiths@gmail.com
 [github]
 	user = techbelly
+[core]
+	excludesfile = ~/.gitignore
+[alias]
+	st = status
+	ci = commit
+	co = checkout
+	br = branch
+[color]
+	branch = auto
+	diff = auto
+	interactive = auto
+	status = auto
+[merge]
+	tool = opendiff
