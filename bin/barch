@@ -64,7 +64,7 @@ sum_so_far = 0
 quartile = 0.25
 histogram.each do |category,value|
 	scaledentry = (value / max_value) * 40
-	stars = "❚" * scaledentry
+	stars = "▆" * scaledentry
 	percent = (value/total_value)*100
 	
 	printf(format,category,stars,value,percent)
