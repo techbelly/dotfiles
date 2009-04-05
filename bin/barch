@@ -37,7 +37,7 @@
 require 'rubygems'
 require 'facets/dictionary'
 
-mysql_table_row = %r{\|\s*([^\|\s]*)\s*\|\s*([^\|\s]*)\s*\|}
+mysql_table_row = %r{\|\s*([^\|]*)\s*\|\s*([^\|\s]*)\s*\|}
 
 histogram = Dictionary.new(0)
 
@@ -48,7 +48,7 @@ ARGF.each do |line|
   unless found_header
     found_header = true
   else
-    category, value = data_or_header[1],data_or_header[2].to_f
+    category, value = data_or_header[1].chomp,data_or_header[2].to_f
     histogram[category] = histogram[category] + value
   end
 end
