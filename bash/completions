@@ -6,6 +6,9 @@ if [ -f $GIT_HOME/contrib/completion/git-completion.bash ]; then
 	. $GIT_HOME/contrib/completion/git-completion.bash
 fi
 
+if [ -d /opt/local/share/doc/git-core/contrib/completion ]; then
+  . /opt/local/share/doc/git-core/contrib/completion/git-completion.bash
+fi
 
 SSH_COMPLETE=( $(cat ~/.ssh/known_hosts | cut -f 1 -d ' ' | sed -e s/,.*//g | uniq | egrep -v [0123456789]) )
 complete -o default -W "${SSH_COMPLETE[*]}" ssh

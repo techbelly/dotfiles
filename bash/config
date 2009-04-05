@@ -10,6 +10,8 @@ fi
 export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad
 
-export GIT_HOME=/usr/local/git
+if [ -d /usr/local/git ]; then
+  export GIT_HOME=/usr/local/git
+fi
 
 export GREP_OPTIONS='--color=auto' GREP_COLOR='1;32'
