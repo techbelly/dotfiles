@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ssh -D 3022 -f -C -q -N beerscope@www.techbelly.com
