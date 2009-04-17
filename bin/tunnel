@@ -1,3 +1,52 @@
-#!/bin/bash
+#!/usr/bin/env ruby
 
-ssh -D 3022 -f -C -q -N beerscope@www.techbelly.com
+def switch_on
+  start_tunnel && proxy_traffic
+end
+
+def switch_off
+  stop_tunnel && stop_proxying
+end
+
+def ssh_command
+  "ssh -D #{PORT} -f -C -q -N #{TUNNEL_ENDPOINT}"
+end
+
+def ssh_process_id
+  ssh_processes = `ps -o pid,command -h -e | grep '#{ssh_command}' | grep -v grep`
+  return nil if ssh_processes == ""
+  return ssh_processes.split(' ').first
+end
+
+def start_tunnel
+  system ssh_command if ssh_process_id.nil?
+end
+
+def stop_tunnel
+  process = ssh_process_id
+  system "kill #{process}" unless process.nil?
+end
+
+def proxy_traffic
+  system "sudo networksetup -setsocksfirewallproxy #{INTERFACE} 127.0.0.1 #{PORT} off"
+end
+
+def stop_proxying
+  system "sudo networksetup -setsocksfirewallproxystate #{INTERFACE} off"
+end
+
+action = ARGV[0] || 'usage'
+
+PORT = 3022
+TUNNEL_ENDPOINT = 'beerscope@www.techbelly.com'
+INTERFACE = 'AirPort'
+
+case (action) 
+  when 'on'
+    switch_on
+  when 'off'
+    switch_off
+  else
+    puts "#{$0} (on|off)"
+end
+
