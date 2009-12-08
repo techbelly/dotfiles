@@ -7,3 +7,7 @@ source ~/.bash/prompt
 if [ -f ~/.bashrc ]; then
   . ~/.bashrc
 fi
+
+if [ -f ~/.homebrew_rc ]; then
+	. ~/.homebrew_rc
+fi
