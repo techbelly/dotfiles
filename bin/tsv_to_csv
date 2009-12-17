@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+while (line = gets)
+	fields = line.split("\t")
+	puts fields.map {|f| '"' + f.chomp.gsub('"','\"') + '"' }.join(",")
+end

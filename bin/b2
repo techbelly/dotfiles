@@ -31,43 +31,23 @@
 # mysql> \n
 # PAGER set to stdout
 # mysql> 
+#skip header
+chart = Hash.new(0)
 
-mysql_table_row = %r{\|\s*([^\|]*)\s*\|\s*([^\|\s]*)\s*\|}
-
-histogram = Hash.new(0)
-
-found_header = false
+#skip header
+ARGF.readline && ARGF.readline && ARGF.readline
 ARGF.each do |line|
-  data_or_header =  line.match mysql_table_row
-  next unless data_or_header
-  unless found_header
-    found_header = true
-  else
-    category, value = data_or_header[1].chomp,data_or_header[2].to_f
-    histogram[category] = histogram[category] + value
-  end
+  match  =  line.match(%r{\|\s*([^\|]*)\s*\|\s*([^\|\s]*)\s*\|})
+  category, value = $1, $2
+  next unless category && value
+  chart[category] +=  value.to_f
 end
 
-max_label_len = histogram.keys.map {|x| x.size }.max
-max_value = histogram.values.max
-total_value = histogram.values.inject(0) {|i,j| i+j }
-
-format = "%-#{max_label_len}s %s (%d/%.2f%%)\n"
-
-print "\n"
-sum_so_far = 0
-quartile = 0.25
-histogram.each do |category,value|
+max_value = chart.values.max
+max_label_len = chart.keys.map {|x| x.size }.max
+chart.each do |category,value|
 	scaledentry = (value / max_value) * 40
 	stars = "▆" * scaledentry
-	percent = (value/total_value)*100
-	
-	printf(format,category,stars,value,percent)
-	
-	sum_so_far += value
-	if sum_so_far > total_value * quartile  then
-		print "---------#{100 * quartile}%-------\n"
-		quartile += 0.25
-	end
+	printf("%-#{max_label_len}s %s (%d)\n",
+	       category,stars,value)
 end
-print "\n"
