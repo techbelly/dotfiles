@@ -1,0 +1,7 @@
+#!/bin/sh
+#
+#   Reverse the order of the lines in each file
+
+awk '{ printf("%d:%s\n", NR, $0);}' $* |
+sort -t: -nr |
+sed 's/^[0-9][0-9]*://'

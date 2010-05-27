@@ -1,7 +1,6 @@
-export MANPATH=$MANPATH:$GIT_HOME/man:/opt/local/man
-
 if [ -d /opt/local ]; then
   export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+  export MANPATH=$MANPATH:/opt/local/man
 fi
 
 if [ -d $HOME/bin ]; then
@@ -13,5 +12,16 @@ if [ -d  ~/.gem/ruby/1.8/bin ]; then
 fi
  
 if [ -d $GIT_HOME ]; then
-  export PATH=$GIT_HOME/bin:$PATH
+  export PATH=$PATH:$GIT_HOME/bin
+  export MANPATH=$MANPATH:$GIT_HOME/man
+fi
+
+
+if [ -d ~/android-sdk ]; then
+	export PATH=$PATH:$HOME/android-sdk/tools
+fi
+
+
+if [ -d ~/appengine-java-sdk ]; then
+	export PATH=$PATH:$HOME/appengine-java-sdk/bin
 fi
