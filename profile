@@ -11,3 +11,7 @@ fi
 if [ -f ~/.homebrew_rc ]; then
 	. ~/.homebrew_rc
 fi
+
+if [ -f ~/.rvm/scripts/rvm ]; then 
+    . ~/.rvm/scripts/rvm
+fi

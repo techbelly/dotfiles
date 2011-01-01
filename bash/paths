@@ -1,6 +1,11 @@
 if [ -d /opt/local ]; then
-  export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+  export PATH=/usr/local/bin:/usr/local/sbin:/opt/local/bin:/opt/local/sbin:$PATH
   export MANPATH=$MANPATH:/opt/local/man
+fi
+
+if [ -d /usr/local ]; then
+  export PATH=/usr/local/bin:/usr/local/sbin:$PATH
+  export MANPATH=$MANPATH:/usr/local/man
 fi
 
 if [ -d $HOME/bin ]; then

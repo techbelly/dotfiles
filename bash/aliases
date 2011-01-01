@@ -62,6 +62,8 @@ alias gb='git branch'
 alias gs='git status'
 alias grm="git status | grep deleted | awk '{print \$3}' | xargs git rm"
 
+alias vim="vim -N"
+
 # rails
 alias sc='script/console'
 alias ss='script/server'

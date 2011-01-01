@@ -1,11 +1,6 @@
 # set editor
-if [ -d /Applications/Textmate.app ]; then
-	export SVN_EDITOR='mate -w'
-	export EDITOR='mate -w'
-else
-	export SVN_EDITOR='vi'
-	export EDITOR='vi'
-fi
+export SVN_EDITOR='vim'
+export EDITOR='vim'
 
 export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad
