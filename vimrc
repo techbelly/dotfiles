@@ -82,7 +82,7 @@ nnoremap <silent> <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<cr>
 nnoremap <silent> <leader>sv :so $MYVIMRC<cr>
 
 " Automatic fold settings for specific files. Uncomment to use.
-autocmd FileType ruby setlocal foldmethod=syntax
+autocmd FileType ruby setlocal foldmethod=syntax shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType css  setlocal foldmethod=indent shiftwidth=2 tabstop=2
 
 autocmd FileType python setlocal shiftwidth=4 tabstop=4 nowrap go+=b smarttab softtabstop=4 
@@ -93,3 +93,5 @@ autocmd FileType python imap <F5> <ESC>:w<CR>:!python %<CR>
 
 so .local.vim
 
+let NERDTreeIgnore=['\.pyc$','\~$']
+map <leader>n :NERDTreeToggle<CR>
