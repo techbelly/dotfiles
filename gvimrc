@@ -1,7 +1,12 @@
 " Example Vim graphical configuration.
 " Copy to ~/.gvimrc or ~/_gvimrc.
 
-" set guifont=Menlo\ Regular:h14            " Font family and font size.
+if has("gui_gtk2")
+    set guifont=Droid\ Sans\ Mono\ 10
+elseif has("gui_macvim")
+    set guifont=Menlo\ Regular:h14           " Font family and font size.
+end
+
 set antialias                     " MacVim: smooth fonts.
 set encoding=utf-8                " Use UTF-8 everywhere.
 set guioptions-=T                 " Hide toolbar.
