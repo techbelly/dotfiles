@@ -14,7 +14,7 @@ set showcmd                       " Display incomplete commands.
 set showmode                      " Display the mode you're in.
 
 set backspace=indent,eol,start    " Intuitive backspacing.
-
+set nofoldenable
 set hidden                        " Handle multiple buffers better.
 
 set wildmenu                      " Enhanced command line completion.
@@ -64,15 +64,6 @@ nnoremap ; :
 
 cmap w!! w !sudo tee % >/dev/null
 
-map <leader>tt :tabnew<cr>
-map <leader>te :tabedit
-map <leader>tc :tabclose<cr>
-map <leader>to :tabonly<cr>
-map <leader>tn :tabnext<cr>
-map <leader>tp :tabprevious<cr>
-map <leader>tf :tabfirst<cr>
-map <leader>tl :tablast<cr>
-map <leader>tm :tabmove
 
 nnoremap <leader><space> :noh<cr>
 nnoremap <tab> %
@@ -82,7 +73,7 @@ nnoremap <silent> <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<cr>
 nnoremap <silent> <leader>sv :so $MYVIMRC<cr>
 
 " Automatic fold settings for specific files. Uncomment to use.
-autocmd FileType ruby setlocal foldmethod=syntax
+autocmd FileType ruby setlocal foldmethod=syntax smarttab shiftwidth=2 tabstop=2 softtabstop=4
 autocmd FileType css  setlocal foldmethod=indent shiftwidth=2 tabstop=2
 
 autocmd FileType python setlocal shiftwidth=4 tabstop=4 nowrap go+=b smarttab softtabstop=4 
@@ -91,5 +82,5 @@ autocmd FileType python set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%
 autocmd FileType python nmap <F5> :w<CR>:!python %<CR>
 autocmd FileType python imap <F5> <ESC>:w<CR>:!python %<CR>
 
-so .local.vim
+so $HOME/.local.vim
 
