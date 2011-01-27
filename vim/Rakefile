@@ -1,13 +1,3 @@
-########################################################################
-###
-### Ben Bleything's Vim Setup
-### Based on the work of many others. See README.rdoc for credits.
-###
-### Git Hubs: http://github.com/bleything/dotvim
-### Internet Electronic Mail: ben@bleything.net
-###
-########################################################################
-
 require 'pathname'
 
 task :default do
@@ -18,13 +8,23 @@ end
 
 namespace :update do
 
-  BUNDLES = {
-    # plugins
-    :bufexplorer   => "http://www.vim.org/scripts/download_script.php?src_id=12904",
-    :taglist       => "http://www.vim.org/scripts/download_script.php?src_id=7701",
+  task :ensure_bundle_dir do
+    bundle_home = Pathname.new( ENV['HOME'] ) + '.vim' + 'bundle'
+    mkdir_p bundle_home
+  end
 
-    :gist => "git://github.com/vim-scripts/Gist.vim.git",
-    # syntax definitions
+  def vim_script(id)
+    "http://www.vim.org/scripts/download_script.php?src_id=#{id}"
+  end
+
+  BUNDLES = {
+    :bufexplorer   => vim_script(12904),
+    :taglist       => vim_script(7701),
+
+    :ack              => "git://github.com/mileszs/ack.vim.git",
+    :nerdtree         => "git://github.com/wycats/nerdtree.git",
+
+    :gist             => "git://github.com/vim-scripts/Gist.vim.git",
     
     :syntax_git       => "git://github.com/tpope/vim-git.git",
     :syntax_markdown  => "git://github.com/ujihisa/vim-markdown.git",
@@ -33,27 +33,33 @@ namespace :update do
   }
 
   desc "update any bundles defined in the Rakefile"
-  task :bundles do
+  task :bundles => [:ensure_bundle_dir] do
 
     bundle_home = Pathname.new( ENV['HOME'] ) + '.vim' + 'bundle'
-    mkdir_p bundle_home
-
     BUNDLES.sort_by {|k,v| k.to_s }.each do |bundle, location|
       target_path = bundle_home + bundle.to_s
 
-      puts "*" * 72
-      puts "*** Instaling #{bundle} to #{target_path} from #{location}"
-      puts # blank line
+      puts "*** Installing #{bundle} to #{target_path} from #{location}"
 
       rm_rf target_path
 
-      case location.match( /^(.*?):/ )[1]
-      when 'git'
+      if location =~ /git$/
         sh "git clone #{location} #{target_path} > /dev/null"
         rm_rf target_path + '.git'
-      when 'http'
+      elsif location =~ /download_script/
         mkdir_p target_path
-        sh "cd #{target_path} && curl -s '#{location}' | tar zx -"
+        if filename= `curl --silent --head #{location} | grep attachment`[/filename=(.+)/,1]
+          filename.strip!
+          case filename
+          when /zip$/
+            sh "curl -s '#{location}' > /tmp/#{filename}"
+            sh "unzip -o /tmp/#{filename} -d #{target_path}"
+          when /tar\.gz$/
+            sh "cd #{target_path} && curl -s '#{location}' | tar zx -"
+          end
+        else
+          raise ArgumentError, "unknown script type"
+        end
       end
 
       docdir = target_path + 'doc'

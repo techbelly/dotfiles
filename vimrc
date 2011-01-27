@@ -84,3 +84,5 @@ autocmd FileType python imap <F5> <ESC>:w<CR>:!python %<CR>
 
 so $HOME/.local.vim
 
+let NERDTreeIgnore=['\.pyc$','\~$']
+map <leader>n :NERDTreeToggle<CR>
