@@ -23,9 +23,11 @@ namespace :update do
 
     :ack              => "git://github.com/mileszs/ack.vim.git",
     :nerdtree         => "git://github.com/wycats/nerdtree.git",
+    :nerdcommenter    => "git://github.com/scrooloose/nerdcommenter.git",
 
     :gist             => "git://github.com/vim-scripts/Gist.vim.git",
     
+    :surround         => "git://github.com/tpope/vim-surround.git",
     :syntax_git       => "git://github.com/tpope/vim-git.git",
     :syntax_markdown  => "git://github.com/ujihisa/vim-markdown.git",
 
