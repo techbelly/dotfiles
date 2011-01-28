@@ -93,5 +93,12 @@ autocmd FileType python imap <F5> <ESC>:w<CR>:!python %<CR>
 
 so $HOME/.local.vim
 
+
+nnoremap <leader>t :TlistToggle<CR>
+let Tlist_Use_Right_Window = 1 
+let Tlist_Show_One_File = 1
+let Tlist_Exit_OnlyWindow = 1
+let Tlist_Use_SingleClick = 1
+                        
 let NERDTreeIgnore=['\.pyc$','\~$']
 map <leader>n :NERDTreeToggle<CR>
