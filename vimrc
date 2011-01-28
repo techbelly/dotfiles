@@ -61,8 +61,17 @@ set spelllang=en_GB.UTF-8
 set guioptions=
 
 nnoremap ; :
+nnoremap j gj
+nnoremap k gk
+nnoremap <leader>a :Ack 
 
 cmap w!! w !sudo tee % >/dev/null
+
+nnoremap <leader>w <C-w>v<C-w>l
+nnoremap <C-h> <C-w>h
+nnoremap <C-k> <C-w>k
+nnoremap <C-j> <C-w>j
+nnoremap <C-l> <C-w>l
 
 
 nnoremap <leader><space> :noh<cr>
