@@ -1,12 +1,9 @@
 require 'pathname'
 
-task :default do
-  puts "Hi! All this Rakefile can do right now is update the bundles:"
-  puts # blank line
-  puts "  $ rake update:bundles"
+task :default => ["vim:update"] do
 end
 
-namespace :update do
+namespace :vim do
 
   task :ensure_bundle_dir do
     bundle_home = Pathname.new( ENV['HOME'] ) + '.vim' + 'bundle'
@@ -20,7 +17,8 @@ namespace :update do
   BUNDLES = {
     :bufexplorer   => vim_script(12904),
     :taglist       => vim_script(7701),
-
+    :tvo           => vim_script(5768),
+    
     :ack              => "git://github.com/mileszs/ack.vim.git",
     :nerdtree         => "git://github.com/wycats/nerdtree.git",
     :nerdcommenter    => "git://github.com/scrooloose/nerdcommenter.git",
@@ -35,15 +33,15 @@ namespace :update do
   }
 
   desc "update any bundles defined in the Rakefile"
-  task :bundles => [:ensure_bundle_dir] do
+  task :update => [:ensure_bundle_dir] do
 
     bundle_home = Pathname.new( ENV['HOME'] ) + '.vim' + 'bundle'
     BUNDLES.sort_by {|k,v| k.to_s }.each do |bundle, location|
       target_path = bundle_home + bundle.to_s
 
-      puts "*** Installing #{bundle} to #{target_path} from #{location}"
+      next if File.exists? target_path
 
-      rm_rf target_path
+      puts "*** Installing #{bundle} to #{target_path} from #{location}"
 
       if location =~ /git$/
         sh "git clone #{location} #{target_path} > /dev/null"

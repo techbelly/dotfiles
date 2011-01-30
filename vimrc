@@ -59,6 +59,8 @@ set fileencoding=utf-8
 set spelllang=en_GB.UTF-8
 
 set guioptions=
+set cursorline
+
 
 nnoremap ; :
 nnoremap j gj
