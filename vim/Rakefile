@@ -14,22 +14,26 @@ namespace :vim do
     "http://www.vim.org/scripts/download_script.php?src_id=#{id}"
   end
 
+  def github(project)
+    "git://github.com/#{project}.git"
+  end
+
   BUNDLES = {
     :bufexplorer   => vim_script(12904),
     :taglist       => vim_script(7701),
     :tvo           => vim_script(5768),
     
-    :ack              => "git://github.com/mileszs/ack.vim.git",
-    :nerdtree         => "git://github.com/wycats/nerdtree.git",
-    :nerdcommenter    => "git://github.com/scrooloose/nerdcommenter.git",
-
-    :gist             => "git://github.com/vim-scripts/Gist.vim.git",
+    :ack              => github("mileszs/ack.vim"),
+    :nerdtree         => github("wycats/nerdtree"),
+    :nerdcommenter    => github("scrooloose/nerdcommenter"),
     
-    :surround         => "git://github.com/tpope/vim-surround.git",
-    :syntax_git       => "git://github.com/tpope/vim-git.git",
-    :syntax_markdown  => "git://github.com/ujihisa/vim-markdown.git",
+    :gist             => github("vim-scripts/Gist.vim"),
+    :surround         => github("tpope/vim-surround"),
 
-    :syntax_textile   => "git://github.com/timcharper/textile.vim.git"
+    :syntax_git       => github("tpope/vim-git"),
+    :syntax_markdown  => github("ujihisa/vim-markdown"),
+    :syntax_puppet    => vim_script(8052),
+    :syntax_textile   => github("timcharper/textile.vim")
   }
 
   desc "update any bundles defined in the Rakefile"
