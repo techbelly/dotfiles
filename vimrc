@@ -1,12 +1,6 @@
-set nocompatible
-
-filetype off
-
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+source bundles.vim
 
 syntax enable                     " Turn on syntax highlighting.
-filetype plugin indent on         " Turn on file type detection.
 
 runtime macros/matchit.vim        " Load the matchit plugin.
 
@@ -109,7 +103,6 @@ nmap <C-Down> ddp
 vmap <C-Up> xkP`[V`]
 vmap <C-Down> xp`[V`]
 
-Bundle 'taglist.vim'
 
 nnoremap <leader>t :TlistToggle<CR>
 let Tlist_Use_Right_Window = 1 
@@ -117,21 +110,8 @@ let Tlist_Show_One_File = 1
 let Tlist_Exit_OnlyWindow = 1
 let Tlist_Use_SingleClick = 1
 
-Bundle "nathanaelkane/vim-indent-guides"
-Bundle "mileszs/ack.vim"
-Bundle "scrooloose/nerdcommenter"
-Bundle "fs111/pydoc.vim"
-Bundle "vim-scripts/Gist.vim"
-Bundle "tpope/vim-surround"
-Bundle "Lokaltog/vim-easymotion"    
-Bundle "tpope/vim-git"
-Bundle "ujihisa/vim-markdown"
-Bundle "timcharper/textile.vim")
-Bundle "altercation/vim-colors-solarized"
-
 colorscheme solarized
 
-Bundle "wycats/nerdtree"
 let NERDTreeIgnore=['\.pyc$','\~$']
 map <leader>n :NERDTreeToggle<CR>
 set NERDTreeChDirMode = 2

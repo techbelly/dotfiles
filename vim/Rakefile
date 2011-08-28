@@ -1,0 +1,24 @@
+require 'pathname'
+
+task :default => ["vim:bootstrap"] do
+end
+
+namespace :vim do
+
+  task :ensure_bundle_dir do
+    bundle_home = Pathname.new( ENV['HOME'] ) + '.vim' + 'bundle'
+    mkdir_p bundle_home
+  end
+
+  desc "update any bundles defined in the Rakefile"
+  task :bootstrap => [:ensure_bundle_dir] do
+
+    vim_dir = Pathname.new( ENV['HOME'] ) + '.vim' 
+    bundle_home = vim_dir + 'bundle'
+    sh "git clone http://github.com/gmarik/vundle.git #{bundle_home}/vundle"
+    sh "vim -u #{vim_dir}/bundles.vim +BundleInstall +q"
+     
+
+  end # task :bundles
+
+end # namespace :update
