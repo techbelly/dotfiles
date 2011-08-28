@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# timeout
+# Usage: timeout timeout_in_seconds command [args]
+# Example: timeout 120 wget http://www.slowserver.com 
+
+timeout=$1
+command=$2
+command_args=${@:3} 
+
+$command $command_args &
+pid=$!
+( sleep $timeout && kill -9 $pid ) &> /dev/null
+
+wait $pid &> /dev/null
+exitcode=$?
+exit $exitcode
