@@ -5,6 +5,7 @@
 	user = techbelly
 [core]
 	excludesfile = ~/.gitignore
+	editor = mvim
 [alias]
 	st = status
 	ci = commit
@@ -16,4 +17,4 @@
 	interactive = auto
 	status = auto
 [merge]
-	tool = opendiff
+	tool = mvimdiff
