@@ -2,8 +2,8 @@ set nocompatible
 
 filetype off
 
-silent! call pathogen#helptags()
-silent! call pathogen#runtime_append_all_bundles()
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
 
 syntax enable                     " Turn on syntax highlighting.
 filetype plugin indent on         " Turn on file type detection.
@@ -31,7 +31,7 @@ set hlsearch                      " Highlight matches.
 
 set gdefault
 set nowrap                          " Turn on line wrapping.
-set scrolloff=3                   " Show 3 lines of context around the cursor.
+set scrolloff=7                   " Show 3 lines of context around the cursor.
 
 set listchars=tab:▸\ ,eol:¬,trail:.
 
@@ -50,10 +50,12 @@ set expandtab
 set laststatus=2                  " Show the status line all the time
 set statusline=[%n]\ %<%.99f\ %h%w%m%r%y\ %{exists('*CapsLockStatusline')?CapsLockStatusline():''}%=%-16(\ %l,%c-%v\ %)%P
 
-colorscheme molokai
+set background=dark
 set pastetoggle=<F2>
 
 let mapleader = ","
+
+set showmatch
 
 set encoding=utf-8
 set fileencoding=utf-8
@@ -77,6 +79,9 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-l> <C-w>l
 
 
+map <space> /
+map <c-space> ?
+
 nnoremap <leader><space> :noh<cr>
 nnoremap <tab> %
 vnoremap <tab> %
@@ -84,24 +89,67 @@ vnoremap <tab> %
 nnoremap <silent> <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<cr>
 nnoremap <silent> <leader>sv :so $MYVIMRC<cr>
 
+set shiftwidth=2
+set tabstop=2
+set softtabstop=2
+set smarttab
+
 " Automatic fold settings for specific files. Uncomment to use.
 autocmd FileType ruby setlocal foldmethod=syntax smarttab shiftwidth=2 tabstop=2 softtabstop=4
 autocmd FileType css  setlocal foldmethod=indent shiftwidth=2 tabstop=2
-
 autocmd FileType python setlocal shiftwidth=4 tabstop=4 nowrap go+=b smarttab softtabstop=4 
-autocmd FileType python set makeprg=python\ -c\ \"import\ py_compile,sys;\ sys.stderr=sys.stdout;\ py_compile.compile(r'%')\"
-autocmd FileType python set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m
-autocmd FileType python nmap <F5> :w<CR>:!python %<CR>
-autocmd FileType python imap <F5> <ESC>:w<CR>:!python %<CR>
 
 so $HOME/.local.vim
 
+map <leader>ew :e <C-R>=expand("%:p:h") . "/" <CR>
+map <leader>es :sp <C-R>=expand("%:p:h") . "/" <CR>
+
+nmap <C-Up> ddkP
+nmap <C-Down> ddp
+vmap <C-Up> xkP`[V`]
+vmap <C-Down> xp`[V`]
+
+Bundle 'taglist.vim'
 
 nnoremap <leader>t :TlistToggle<CR>
 let Tlist_Use_Right_Window = 1 
 let Tlist_Show_One_File = 1
 let Tlist_Exit_OnlyWindow = 1
 let Tlist_Use_SingleClick = 1
-                        
+
+Bundle "nathanaelkane/vim-indent-guides"
+Bundle "mileszs/ack.vim"
+Bundle "scrooloose/nerdcommenter"
+Bundle "fs111/pydoc.vim"
+Bundle "vim-scripts/Gist.vim"
+Bundle "tpope/vim-surround"
+Bundle "Lokaltog/vim-easymotion"    
+Bundle "tpope/vim-git"
+Bundle "ujihisa/vim-markdown"
+Bundle "timcharper/textile.vim")
+Bundle "altercation/vim-colors-solarized"
+
+colorscheme solarized
+
+Bundle "wycats/nerdtree"
 let NERDTreeIgnore=['\.pyc$','\~$']
 map <leader>n :NERDTreeToggle<CR>
+set NERDTreeChDirMode = 2
+
+au VimEnter *  NERDTree
+
+augroup BgHighlight
+    autocmd!
+    autocmd WinEnter * set cursorline
+    autocmd WinLeave * set nocursorline
+augroup END
+
+set antialias
+set guifont=Consolas:h14
+
+let g:EasyMotion_mapping_w = '<Leader>m'
+let g:EasyMotion_mapping_W = '<Leader>M'
+let g:EasyMotion_mapping_t = '<Leader>d'
+
+
+syntax on
