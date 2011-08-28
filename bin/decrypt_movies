@@ -1,0 +1,66 @@
+#!/usr/bin/env ruby
+require 'open3'
+require 'pp'
+
+@count = 0
+
+def strip_movie_folder(out)
+  filename = File.basename(out)
+  dir = File.dirname(out)
+  dir = dir.split("/")[0...-1].join("/")
+  dir + "/" + filename
+end
+
+def ensure_directory_exists(out)
+  dir = File.dirname(out)
+  `mkdir -p "#{dir}"`
+end
+
+def decrypt(f,out,results,friendly_name)
+  cmd = %$/Applications/requiem-2.0.1/mac/decrypt "#{f}" "#{out}"$
+  Open3.popen3(cmd) do |stdin, stdout, stderr|
+    stdin.close
+    err = stderr.read
+    if err && err != ""
+      results[err.chomp] << friendly_name
+    else
+      results["INFO: decrypted"] << friendly_name
+      @count += 1
+    end
+  end
+end
+
+def decrypt_all(source_dir,dest_dir)
+  files = `find "#{source_dir}" -name *.m4v | grep -v Extras | grep -v \\(HD\\) | grep -v iTunes\\ U`
+  results = Hash.new {|h,k| h[k] = []}
+  
+  files.split("\n").each do |input|
+    out = input.gsub(source_dir,dest_dir).gsub('m4v','mp4')
+    out = strip_movie_folder(out) if out =~ /Movies/ 
+    friendly_name = out.gsub(dest_dir+"/","")
+  
+    if File.exists?(out)
+      results["WARNING: skipped (already decrypted)"] << friendly_name 
+    else
+      ensure_directory_exists(out)
+      decrypt(input,out,results,friendly_name)
+    end
+    break if @count > 10
+    
+    $stdout.write "."
+  end
+  $stdout.write "\n"
+  results
+end
+
+def print_results(results,skip_warn = true)
+  results.keys.sort.each do |k|
+    next if k =~ /^WARNING/ && skip_warn
+    puts k
+    results[k].sort.each {|t| puts "\t#{t}"}
+  end
+end
+
+source_dir = "/Volumes/Drobo/to_decrypt"
+dest_dir = '/Volumes/Drobo/decrypted'
+print_results decrypt_all(source_dir,dest_dir)
