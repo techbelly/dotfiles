@@ -21,7 +21,7 @@ set number                        " Show line numbers.
 set ruler                         " Show cursor position.
 
 set incsearch                     " Highlight matches as you type.
-set hlsearch                      " Highlight matches.
+set nohlsearch                      " Highlight matches.
 
 set gdefault
 set nowrap                          " Turn on line wrapping.
@@ -81,6 +81,7 @@ nnoremap <tab> %
 vnoremap <tab> %
 
 nnoremap <silent> <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<cr>
+nnoremap <silent> <leader>eb <C-w><C-v><C-l>:e $HOME/.vim/bundles.vim<cr>
 nnoremap <silent> <leader>sv :so $MYVIMRC<cr>
 
 set shiftwidth=2
@@ -93,6 +94,9 @@ autocmd FileType ruby setlocal foldmethod=syntax smarttab shiftwidth=2 tabstop=2
 autocmd FileType css  setlocal foldmethod=indent shiftwidth=2 tabstop=2
 autocmd FileType python setlocal shiftwidth=4 tabstop=4 nowrap go+=b smarttab softtabstop=4 
 
+au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}    set ft=ruby
+au BufNewFile,BufRead *.json set ft=javascript
+
 so $HOME/.local.vim
 
 map <leader>ew :e <C-R>=expand("%:p:h") . "/" <CR>
@@ -103,8 +107,18 @@ nmap <C-Down> ddp
 vmap <C-Up> xkP`[V`]
 vmap <C-Down> xp`[V`]
 
+nnoremap <leader>t :CommandT<CR>
+let g:CommandTMatchWindowAtTop=1 " show window at top
+let g:CommandTMaxHeight=20
 
-nnoremap <leader>t :TlistToggle<CR>
+if has("gui_macvim")
+    macmenu &File.New\ Tab key=<nop>
+    map <D-t> :CommandT<CR>
+endif
+
+
+
+nnoremap <leader>l :TlistToggle<CR>
 let Tlist_Use_Right_Window = 1 
 let Tlist_Show_One_File = 1
 let Tlist_Exit_OnlyWindow = 1
@@ -112,9 +126,10 @@ let Tlist_Use_SingleClick = 1
 
 colorscheme solarized
 
-let NERDTreeIgnore=['\.pyc$','\~$']
+let g:NERDTreeIgnore=['\.pyc$','\~$']
 map <leader>n :NERDTreeToggle<CR>
-set NERDTreeChDirMode = 2
+let g:NERDTreeChDirMode=2
+
 
 au VimEnter *  NERDTree
 
@@ -124,12 +139,26 @@ augroup BgHighlight
     autocmd WinLeave * set nocursorline
 augroup END
 
-set antialias
-set guifont=Consolas:h14
 
 let g:EasyMotion_mapping_w = '<Leader>m'
 let g:EasyMotion_mapping_W = '<Leader>M'
 let g:EasyMotion_mapping_t = '<Leader>d'
+let g:EasyMotion_mapping_b = '<Leader>z'
+
+nmap <D-[> <<
+nmap <D-]> >>
+vmap <D-[> <gv
+vmap <D-]> >gv
 
 
 syntax on
+
+
+" gist-vim defaults
+if has("mac")
+  let g:gist_clip_command = 'pbcopy'
+elseif has("unix")
+  let g:gist_clip_command = 'xclip -selection clipboard'
+endif
+let g:gist_detect_filetype = 1
+let g:gist_open_browser_after_post = 1
