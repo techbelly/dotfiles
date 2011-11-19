@@ -4,6 +4,7 @@ syntax enable                     " Turn on syntax highlighting.
 
 runtime macros/matchit.vim        " Load the matchit plugin.
 
+" Vim settings {{{
 set showcmd                       " Display incomplete commands.
 set showmode                      " Display the mode you're in.
 
@@ -58,11 +59,28 @@ set spelllang=en_GB.UTF-8
 set guioptions=
 set cursorline
 
+set shiftwidth=2
+set tabstop=2
+set softtabstop=2
+set smarttab
 
-nnoremap ; :
+syntax on
+
+augroup BgHighlight
+    autocmd!
+    autocmd WinEnter * set cursorline
+    autocmd WinLeave * set nocursorline
+augroup END 
+" }}}
+
+colorscheme solarized
+
+" Keymappings {{{
 nnoremap j gj
 nnoremap k gk
 nnoremap <leader>a :Ack 
+
+inoremap jk <esc>
 
 cmap w!! w !sudo tee % >/dev/null
 
@@ -72,9 +90,11 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-j> <C-w>j
 nnoremap <C-l> <C-w>l
 
+nnoremap H 0
+nnoremap L $
 
-map <space> /
-map <c-space> ?
+noremap <space> /
+noremap <c-space> ?
 
 nnoremap <leader><space> :noh<cr>
 nnoremap <tab> %
@@ -84,11 +104,24 @@ nnoremap <silent> <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<cr>
 nnoremap <silent> <leader>eb <C-w><C-v><C-l>:e $HOME/.vim/bundles.vim<cr>
 nnoremap <silent> <leader>sv :so $MYVIMRC<cr>
 
-set shiftwidth=2
-set tabstop=2
-set softtabstop=2
-set smarttab
+noremap <leader>ew :e <C-R>=expand("%:p:h") . "/" <CR>
+noremap <leader>es :sp <C-R>=expand("%:p:h") . "/" <CR>
 
+nnoremap <C-Up> ddkP
+nnoremap <C-Down> ddp
+vnoremap <C-Up> xkP`[V`]
+vnoremap <C-Down> xp`[V`]
+
+noremap <D-[> <<
+noremap <D-]> >>
+vnoremap <D-[> <gv
+vnoremap <D-]> >gv
+
+nnoremap <leader>sc mqA;<esc>`q
+
+" }}}
+
+" Filetypes {{{
 " Automatic fold settings for specific files. Uncomment to use.
 autocmd FileType ruby setlocal foldmethod=syntax smarttab shiftwidth=2 tabstop=2 softtabstop=4
 autocmd FileType css  setlocal foldmethod=indent shiftwidth=2 tabstop=2
@@ -96,18 +129,13 @@ autocmd FileType python setlocal shiftwidth=4 tabstop=4 nowrap go+=b smarttab so
 
 au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}    set ft=ruby
 au BufNewFile,BufRead *.json set ft=javascript
+" }}}
 
 so $HOME/.local.vim
 
-map <leader>ew :e <C-R>=expand("%:p:h") . "/" <CR>
-map <leader>es :sp <C-R>=expand("%:p:h") . "/" <CR>
-
-nmap <C-Up> ddkP
-nmap <C-Down> ddp
-vmap <C-Up> xkP`[V`]
-vmap <C-Down> xp`[V`]
-
+" Command T {{{
 nnoremap <leader>t :CommandT<CR>
+nnoremap <leader>bb :CommandTBuffer<CR>
 let g:CommandTMatchWindowAtTop=1 " show window at top
 let g:CommandTMaxHeight=20
 
@@ -115,46 +143,42 @@ if has("gui_macvim")
     macmenu &File.New\ Tab key=<nop>
     map <D-t> :CommandT<CR>
 endif
+" }}}
 
-
-
+" Tlist {{{
 nnoremap <leader>l :TlistToggle<CR>
 let Tlist_Use_Right_Window = 1 
 let Tlist_Show_One_File = 1
 let Tlist_Exit_OnlyWindow = 1
 let Tlist_Use_SingleClick = 1
+let tlist_objc_settings = 'ObjectiveC;i:interface;c:class;m:method;p:property;I:implementation'
+" }}}
 
-colorscheme solarized
-
+" NERDTree ------ {{{
 let g:NERDTreeIgnore=['\.pyc$','\~$']
-map <leader>n :NERDTreeToggle<CR>
+noremap <leader>n :NERDTreeToggle<CR>
 let g:NERDTreeChDirMode=2
-
-
-au VimEnter *  NERDTree
-
-augroup BgHighlight
-    autocmd!
-    autocmd WinEnter * set cursorline
-    autocmd WinLeave * set nocursorline
+augroup nerdtree
+  au!
+  au VimEnter *  NERDTree
 augroup END
+" }}}
 
+" Vimscript ---------------------- {{{
+augroup filetype_vim
+  au!
+  au FileType vim setlocal foldmethod=marker foldenable
+augroup END
+" }}}
 
+" EasyMotion ------------------- {{{
 let g:EasyMotion_mapping_w = '<Leader>m'
 let g:EasyMotion_mapping_W = '<Leader>M'
 let g:EasyMotion_mapping_t = '<Leader>d'
 let g:EasyMotion_mapping_b = '<Leader>z'
+" }}}
 
-nmap <D-[> <<
-nmap <D-]> >>
-vmap <D-[> <gv
-vmap <D-]> >gv
-
-
-syntax on
-
-
-" gist-vim defaults
+" Gist-vim --- {{{
 if has("mac")
   let g:gist_clip_command = 'pbcopy'
 elseif has("unix")
@@ -162,3 +186,5 @@ elseif has("unix")
 endif
 let g:gist_detect_filetype = 1
 let g:gist_open_browser_after_post = 1
+" }}}
+
