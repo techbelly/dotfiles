@@ -15,6 +15,7 @@ set hidden                        " Handle multiple buffers better.
 set wildmenu                      " Enhanced command line completion.
 set wildmode=list:longest         " Complete files like a shell.
 
+
 set ignorecase                    " Case-insensitive searching.
 set smartcase                     " But case-sensitive if expression contains a capital letter.
 
@@ -34,6 +35,8 @@ set title                         " Set the terminal's title
 
 set visualbell                    " No beeping.
 
+set equalalways
+
 set noswapfile
 set nobackup                      " Don't make a backup before overwriting a file.
 set nowritebackup                 " And again.
@@ -43,9 +46,8 @@ set autoindent
 set expandtab
 
 set laststatus=2                  " Show the status line all the time
-set statusline=[%n]\ %<%.99f\ %h%w%m%r%y\ %{exists('*CapsLockStatusline')?CapsLockStatusline():''}%=%-16(\ %l,%c-%v\ %)%P
 
-set background=dark
+set background=light
 set pastetoggle=<F2>
 
 let mapleader = ","
@@ -73,14 +75,57 @@ augroup BgHighlight
 augroup END 
 " }}}
 
+" Statusline {{{
+augroup ft_statuslinecolor
+    au!
+
+    au InsertEnter * hi StatusLine ctermfg=196 guifg=#FF3145
+    au InsertLeave * hi StatusLine ctermfg=130 guifg=#CD5907
+augroup END
+
+set statusline=%f    " Path.
+set statusline+=%m   " Modified flag.
+set statusline+=%r   " Readonly flag.
+set statusline+=%w   " Preview window flag.
+ 
+set statusline+=\    " Space.
+
+set statusline+=%#redbar#                " Highlight the following as a warning.
+set statusline+=%*                           " Reset highlighting.
+
+set statusline+=%=   " Right align.
+
+" File format, encoding and type.  Ex: "(unix/utf-8/python)"
+set statusline+=(
+set statusline+=%{&ff}                        " Format (unix/DOS).
+set statusline+=/
+set statusline+=%{strlen(&fenc)?&fenc:&enc}   " Encoding (utf-8).
+set statusline+=/
+set statusline+=%{&ft}                        " Type (python).
+set statusline+=)
+
+" Line and column position and counts.
+set statusline+=\ (line\ %l\/%L,\ col\ %03c)
+
+" }}}
+
+set background=dark
 colorscheme solarized
 
 " Keymappings {{{
+
+" up and down is up and down
 nnoremap j gj
 nnoremap k gk
+
 nnoremap <leader>a :Ack 
 
 inoremap jk <esc>
+
+
+" Emacs Heresy
+inoremap <C-a> <esc>I
+inoremap <C-e> <esc>A
 
 cmap w!! w !sudo tee % >/dev/null
 
@@ -104,6 +149,7 @@ nnoremap <silent> <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<cr>
 nnoremap <silent> <leader>eb <C-w><C-v><C-l>:e $HOME/.vim/bundles.vim<cr>
 nnoremap <silent> <leader>sv :so $MYVIMRC<cr>
 
+" Edit files in the same folder as the current one.
 noremap <leader>ew :e <C-R>=expand("%:p:h") . "/" <CR>
 noremap <leader>es :sp <C-R>=expand("%:p:h") . "/" <CR>
 
@@ -117,6 +163,7 @@ noremap <D-]> >>
 vnoremap <D-[> <gv
 vnoremap <D-]> >gv
 
+"Insert a semicolon at the end of a line
 nnoremap <leader>sc mqA;<esc>`q
 
 " }}}
@@ -129,7 +176,10 @@ autocmd FileType python setlocal shiftwidth=4 tabstop=4 nowrap go+=b smarttab so
 
 au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}    set ft=ruby
 au BufNewFile,BufRead *.json set ft=javascript
+au BufRead,BufNewFile *.json set filetype=json foldmethod=syntax
+au FileType json command -range=% -nargs=* Tidy <line1>,<line2>! json_xs -f json -t json-pretty
 " }}}
+
 
 so $HOME/.local.vim
 
@@ -161,7 +211,22 @@ let g:NERDTreeChDirMode=2
 augroup nerdtree
   au!
   au VimEnter *  NERDTree
+  au VimEnter * wincmd p
 augroup END
+autocmd WinEnter * call s:CloseIfOnlyNerdTreeLeft()
+
+" Close all open buffers on entering a window if the only
+" " buffer that's left is the NERDTree buffer
+function! s:CloseIfOnlyNerdTreeLeft()
+  if exists("t:NERDTreeBufName")
+      if bufwinnr(t:NERDTreeBufName) != -1
+          if winnr("$") == 1
+                q
+          endif
+      endif
+  endif
+endfunction
+
 " }}}
 
 " Vimscript ---------------------- {{{
