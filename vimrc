@@ -285,3 +285,9 @@ let g:gist_detect_filetype = 1
 let g:gist_open_browser_after_post = 1
 " }}}
 
+if &term =~ "xterm-256color"
+  set t_Co=256
+  set t_SI = "\<Esc>]12;purple\x7"
+  set t_EI = "\<Esc>]12;blue\x7"
+endif
+
