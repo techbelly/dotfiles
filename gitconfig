@@ -5,7 +5,7 @@
 	user = techbelly
 [core]
 	excludesfile = ~/.gitignore
-	editor = mvim
+	editor = vim
 [alias]
   st = status
 [alias]
