@@ -23,11 +23,12 @@ set number                        " Show line numbers.
 set ruler                         " Show cursor position.
 
 set incsearch                     " Highlight matches as you type.
-set nohlsearch                      " Highlight matches.
+set hlsearch                      " Highlight matches.
 
 set gdefault
 set nowrap                          " Turn on line wrapping.
 set scrolloff=7                   " Show 3 lines of context around the cursor.
+set winwidth=80
 
 set listchars=tab:▸\ ,eol:¬,trail:.
 
