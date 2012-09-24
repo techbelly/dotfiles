@@ -52,7 +52,7 @@ set background=light
 set pastetoggle=<F2>
 
 let mapleader = ","
-
+nnoremap \ ,
 set showmatch
 
 set encoding=utf-8
@@ -66,6 +66,8 @@ set shiftwidth=2
 set tabstop=2
 set softtabstop=2
 set smarttab
+
+set clipboard=unnamed
 
 syntax on
 
@@ -143,8 +145,9 @@ noremap <space> /
 noremap <c-space> ?
 
 nnoremap <leader><space> :noh<cr>
-nnoremap <tab> %
-vnoremap <tab> %
+
+map ; :
+noremap ;; ;
 
 nnoremap <silent> <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<cr>
 nnoremap <silent> <leader>eb <C-w><C-v><C-l>:e $HOME/.vim/bundles.vim<cr>
@@ -168,7 +171,6 @@ vnoremap <D-]> >gv
 nnoremap <leader>sc mqA;<esc>`q
 
 nnoremap <leader><leader> <C-^>
-
 " }}}
 
 " Rails shortcuts {{{
@@ -211,7 +213,7 @@ au BufNewFile,BufRead *.json set ft=javascript
 au BufRead,BufNewFile *.json set filetype=json foldmethod=syntax
 au FileType json command -range=% -nargs=* Tidy <line1>,<line2>! json_xs -f json -t json-pretty
 " }}}
-
+au BufRead,BufNewFile *.go set filetype=go
 
 so $HOME/.local.vim
 

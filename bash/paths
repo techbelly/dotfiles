@@ -21,11 +21,9 @@ if [ -d $GIT_HOME ]; then
   export MANPATH=$MANPATH:$GIT_HOME/man
 fi
 
+export ANDROID_SDK_ROOT=/usr/local/Cellar/android-sdk/r16
 
-if [ -d ~/android-sdk ]; then
-	export PATH=$PATH:$HOME/android-sdk/tools
-fi
-
+export NODE_PATH=$NODE_PATH:/usr/local/lib/node_modules
 
 if [ -d ~/appengine-java-sdk ]; then
 	export PATH=$PATH:$HOME/appengine-java-sdk/bin

@@ -1,4 +1,4 @@
-extract () 
+extract ()
 {
     if [ -f $1 ] ; then
         case $1 in
@@ -19,6 +19,8 @@ extract ()
         echo "'$1' is not a valid file"
     fi
 }
+
+bopen() { cd `bundle show "${1}"` && vim; }  
 
 pman() { man -t "${1}" | open -f -a /Applications/Preview.app; }
 
@@ -41,6 +43,7 @@ cdf()
     echo "cd to \"$currFolderPath\""
     cd "$currFolderPath"
 }
+
 
 # cd
 alias ..='cd ..'
@@ -71,5 +74,8 @@ alias migrate='rake db:migrate db:test:clone'
 alias techbelly='ssh beerscope@www.techbelly.com'
 
 alias lsock='sudo /usr/sbin/lsof -i -P'
+
+alias sshwm='ssh -F ~/.ssh/wmob_config'
+alias scpwm='scp -F ~/.ssh/wmob_config'
 
 alias dsrm="find . -type f -name .DS_Store -print0 | xargs -0 rm"
