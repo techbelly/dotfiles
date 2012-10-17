@@ -224,7 +224,6 @@ let g:CommandTMatchWindowAtTop=1 " show window at top
 let g:CommandTMaxHeight=20
 
 if has("gui_macvim")
-    macmenu &File.New\ Tab key=<nop>
     map <D-t> :CommandT<CR>
 endif
 " }}}
