@@ -25,6 +25,10 @@ export ANDROID_SDK_ROOT=/usr/local/Cellar/android-sdk/r16
 
 export NODE_PATH=$NODE_PATH:/usr/local/lib/node_modules
 
+if [ -d /usr/local/share/npm/bin ]; then
+   export PATH=/usr/local/share/npm/bin:$PATH
+fi
+
 if [ -d ~/appengine-java-sdk ]; then
 	export PATH=$PATH:$HOME/appengine-java-sdk/bin
 fi
