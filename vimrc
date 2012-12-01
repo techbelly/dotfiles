@@ -146,6 +146,7 @@ nnoremap <leader><space> :noh<cr>
 
 nnoremap <silent> <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<cr>
 nnoremap <silent> <leader>eb <C-w><C-v><C-l>:e $HOME/.vim/bundles.vim<cr>
+nnoremap <silent> <leader>et <C-w><C-v><C-l>:e $HOME/.temp.vim<CR>
 nnoremap <silent> <leader>sv :so $MYVIMRC<cr>
 
 " Edit files in the same folder as the current one.
@@ -199,21 +200,25 @@ map <leader>gg :topleft 100 :split Gemfile<cr>
 
 " Filetypes {{{
 " Automatic fold settings for specific files. Uncomment to use.
-autocmd FileType ruby setlocal foldmethod=syntax smarttab shiftwidth=2 tabstop=2 softtabstop=4
-autocmd FileType css  setlocal foldmethod=indent shiftwidth=2 tabstop=2
-autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8 textwidth=79 go+=b autoindent softtabstop=4 
-autocmd FileType python autocmd BufWritePre <buffer> :%s/\s\+$//e
-" autocmd FileType python let &makeprg='pylint --reports=n --output-format=parseable %:p'
-" autocmd FileType python let &errorformat='%f:%l: %m'
+augroup file_settings
+  au!
+  autocmd FileType ruby setlocal foldmethod=syntax smarttab shiftwidth=2 tabstop=2 softtabstop=4
 
-au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}    set ft=ruby
-au BufNewFile,BufRead *.json set ft=javascript
-au BufRead,BufNewFile *.json set filetype=json foldmethod=syntax
-au FileType json command -range=% -nargs=* Tidy <line1>,<line2>! json_xs -f json -t json-pretty
-au BufRead,BufNewFile *.go set filetype=go
+  autocmd FileType css  setlocal foldmethod=indent shiftwidth=2 tabstop=2
+  autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8 textwidth=79 go+=b autoindent softtabstop=4 
+  autocmd FileType python autocmd BufWritePre <buffer> :%s/\s\+$//e
+  " autocmd FileType python let &makeprg='pylint --reports=n --output-format=parseable %:p'
+  " autocmd FileType python let &errorformat='%f:%l: %m'
+
+  au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}    set ft=ruby
+  au BufNewFile,BufRead *.json set ft=javascript
+  au BufRead,BufNewFile *.json set filetype=json foldmethod=syntax
+  au FileType json command -range=% -nargs=* Tidy <line1>,<line2>! json_xs -f json -t json-pretty
+  au BufRead,BufNewFile *.go set filetype=go
+augroup END
 " }}}
 
-" Command T {{{
+" ComMand T {{{
 nnoremap <leader>t :CommandT<CR>
 nnoremap <leader>bb :CommandTBuffer<CR>
 let g:CommandTMatchWindowAtTop=1 " show window at top
@@ -243,8 +248,8 @@ augroup nerdtree
   au!
   au VimEnter *  NERDTree
   au VimEnter * wincmd p
+  au WinEnter * call s:CloseIfOnlyNerdTreeLeft()
 augroup END
-autocmd WinEnter * call s:CloseIfOnlyNerdTreeLeft()
 
 " Close all open buffers on entering a window if the only
 " " buffer that's left is the NERDTree buffer
@@ -293,11 +298,14 @@ endif
 
 if has('mouse')
   set mouse=a
-  autocmd VimEnter * set ttymouse=xterm2
-  autocmd FocusGained * set ttymouse=xterm2
-  autocmd BufEnter * set ttymouse=xterm2
-  
+  augroup mouse_settings 
+    autocmd!
+    autocmd VimEnter * set ttymouse=xterm2
+    autocmd FocusGained * set ttymouse=xterm2
+    autocmd BufEnter * set ttymouse=xterm2
+  augroup END
 endif"
 " }}}
 
+so $HOME/.temp.vim
 so $HOME/.local.vim
