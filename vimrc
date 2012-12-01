@@ -1,10 +1,9 @@
 source ~/.vim/bundles.vim
 
+" Vim settings {{{
 syntax enable                     " Turn on syntax highlighting.
-
 runtime macros/matchit.vim        " Load the matchit plugin.
 
-" Vim settings {{{
 set showcmd                       " Display incomplete commands.
 set showmode                      " Display the mode you're in.
 
@@ -15,7 +14,6 @@ set hidden                        " Handle multiple buffers better.
 set wildmenu                      " Enhanced command line completion.
 set wildmode=list:longest         " Complete files like a shell.
 
-
 set ignorecase                    " Case-insensitive searching.
 set smartcase                     " But case-sensitive if expression contains a capital letter.
 
@@ -25,9 +23,8 @@ set ruler                         " Show cursor position.
 set incsearch                     " Highlight matches as you type.
 set hlsearch                      " Highlight matches.
 
-set gdefault
-set nowrap                          " Turn on line wrapping.
-set scrolloff=7                   " Show 3 lines of context around the cursor.
+set nowrap                        " Turn on line wrapping.
+set scrolloff=7                   " Show lines of context around the cursor.
 set winwidth=80
 
 set listchars=tab:▸\ ,eol:¬,trail:.
@@ -46,9 +43,6 @@ set directory=$HOME/.vim/tmp//,.  " Keep swap files in one location
 set autoindent
 set expandtab
 
-set laststatus=2                  " Show the status line all the time
-
-set background=light
 set pastetoggle=<F2>
 
 let mapleader = ","
@@ -67,8 +61,6 @@ set tabstop=2
 set softtabstop=2
 set smarttab
 
-set clipboard=unnamed
-
 syntax on
 
 augroup BgHighlight
@@ -76,16 +68,22 @@ augroup BgHighlight
     autocmd WinEnter * set cursorline
     autocmd WinLeave * set nocursorline
 augroup END 
+
+set background=dark
+colorscheme solarized
+
+" }}}
+
+" TabBar {{{
+augroup ft_tablinecolor
+    au!
+    au InsertEnter * hi TabLineFill ctermbg=red ctermfg=196 guifg=#FF3145
+    au InsertLeave * hi TabLineFill ctermbg=0 ctermfg=130 guifg=#CD5907
+augroup END
+hi TabLineFill cterm=0 ctermfg=130 guifg=#CD5907
 " }}}
 
 " Statusline {{{
-augroup ft_statuslinecolor
-    au!
-
-    au InsertEnter * hi StatusLine ctermfg=196 guifg=#FF3145
-    au InsertLeave * hi StatusLine ctermfg=130 guifg=#CD5907
-augroup END
-
 set statusline=%f    " Path.
 set statusline+=%m   " Modified flag.
 set statusline+=%r   " Readonly flag.
@@ -108,12 +106,9 @@ set statusline+=%{&ft}                        " Type (python).
 set statusline+=)
 
 " Line and column position and counts.
-set statusline+=\ (line\ %l\/%L,\ col\ %03c)
-
+set laststatus=2
+set showtabline=2
 " }}}
-
-set background=dark
-colorscheme solarized
 
 " Keymappings {{{
 
@@ -146,8 +141,8 @@ noremap <c-space> ?
 
 nnoremap <leader><space> :noh<cr>
 
-map ; :
-noremap ;; ;
+" map ; :
+" noremap ;; ;
 
 nnoremap <silent> <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<cr>
 nnoremap <silent> <leader>eb <C-w><C-v><C-l>:e $HOME/.vim/bundles.vim<cr>
@@ -206,16 +201,17 @@ map <leader>gg :topleft 100 :split Gemfile<cr>
 " Automatic fold settings for specific files. Uncomment to use.
 autocmd FileType ruby setlocal foldmethod=syntax smarttab shiftwidth=2 tabstop=2 softtabstop=4
 autocmd FileType css  setlocal foldmethod=indent shiftwidth=2 tabstop=2
-autocmd FileType python setlocal shiftwidth=4 tabstop=4 nowrap go+=b smarttab softtabstop=4 
+autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8 textwidth=79 go+=b autoindent softtabstop=4 
+autocmd FileType python autocmd BufWritePre <buffer> :%s/\s\+$//e
+" autocmd FileType python let &makeprg='pylint --reports=n --output-format=parseable %:p'
+" autocmd FileType python let &errorformat='%f:%l: %m'
 
 au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}    set ft=ruby
 au BufNewFile,BufRead *.json set ft=javascript
 au BufRead,BufNewFile *.json set filetype=json foldmethod=syntax
 au FileType json command -range=% -nargs=* Tidy <line1>,<line2>! json_xs -f json -t json-pretty
-" }}}
 au BufRead,BufNewFile *.go set filetype=go
-
-so $HOME/.local.vim
+" }}}
 
 " Command T {{{
 nnoremap <leader>t :CommandT<CR>
@@ -234,6 +230,8 @@ let Tlist_Use_Right_Window = 1
 let Tlist_Show_One_File = 1
 let Tlist_Exit_OnlyWindow = 1
 let Tlist_Use_SingleClick = 1
+let Tlist_GainFocus_On_ToggleOpen = 1
+let Tlist_Close_On_Select = 1
 let tlist_objc_settings = 'ObjectiveC;i:interface;c:class;m:method;p:property;I:implementation'
 " }}}
 
@@ -286,39 +284,20 @@ let g:gist_detect_filetype = 1
 let g:gist_open_browser_after_post = 1
 " }}}
 
-if &term =~ "xterm-256color"
+" {{{ Mouse and terminal
+if &term =~ "xterm-256color""
   set t_Co=256
   set t_SI = "\<Esc>]12;purple\x7"
   set t_EI = "\<Esc>]12;blue\x7"
 endif
 
-function! RunBuildCommand(cmd)
-  let l:BuildLog = "build/vim.log"
-  if bufname("%") != ""
-    silent write
-  endif
-  echo "Building... "
-  let l:StartTime = reltime()
-  exec "silent !" . a:cmd . " >" . l:BuildLog . " 2>&1"
+if has('mouse')
+  set mouse=a
+  autocmd VimEnter * set ttymouse=xterm2
+  autocmd FocusGained * set ttymouse=xterm2
+  autocmd BufEnter * set ttymouse=xterm2
+  
+endif"
+" }}}
 
-  " xcodebuild does NOT set exit code properly, so check the build log
-  exec "silent !grep -q '^\*\* BUILD FAILED' " . l:BuildLog
-  redraw!
-  if !v:shell_error
-    set errorformat=
-      \%f:%l:%c:{%*[^}]}:\ error:\ %m,
-      \%f:%l:%c:{%*[^}]}:\ fatal\ error:\ %m,
-      \%f:%l:%c:{%*[^}]}:\ warning:\ %m,
-      \%f:%l:%c:\ error:\ %m,
-      \%f:%l:%c:\ fatal\ error:\ %m,
-      \%f:%l:%c:\ warning:\ %m,
-      \%f:%l:\ Error:\ %m,
-      \%f:%l:\ error:\ %m,
-      \%f:%l:\ fatal\ error:\ %m,
-      \%f:%l:\ warning:\ %m
-    execute "cfile! " . l:BuildLog
-  else
-    echo "Building... OK - " . reltimestr(reltime(l:StartTime)) . " seconds"
-  endif
-endfunction
-
+so $HOME/.local.vim
