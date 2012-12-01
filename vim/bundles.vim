@@ -28,9 +28,8 @@ Bundle "vimwiki"
 Bundle 'vividchalk.vim'
 Bundle 'Tabular'
 Bundle 'go.vim'
-
 Bundle 'Conque-Shell'
 Bundle 'bufexplorer.zip'
-
+Bundle 'pep8'
 Bundle 'fugitive.vim'
 filetype plugin indent on 
