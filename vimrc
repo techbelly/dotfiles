@@ -1,3 +1,5 @@
+
+set runtimepath+=~/.vim/localfiles/
 source ~/.vim/bundles.vim
 
 " Vim settings {{{
@@ -207,8 +209,15 @@ augroup file_settings
   autocmd FileType css  setlocal foldmethod=indent shiftwidth=2 tabstop=2
   autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8 textwidth=79 go+=b autoindent softtabstop=4 
   autocmd FileType python autocmd BufWritePre <buffer> :%s/\s\+$//e
-  " autocmd FileType python let &makeprg='pylint --reports=n --output-format=parseable %:p'
-  " autocmd FileType python let &errorformat='%f:%l: %m'
+
+  autocmd FileType python call GrepMap("<F5>",
+        \"pep8 --repeat",
+        \'\%f:\%l\%m',
+        \"PEP8 correct")
+  autocmd FileType python call GrepMap("<F6>", 
+        \'pylint --reports=n --output-format=parseable --generated-members=objects,DoesNotExist -d C0111 -d C0301',
+        \'\%f:\%l: [\%t\%*[^]]] \%m,\%f:\%l: [\%t] \%m',
+        \'Pylint Correct')
 
   au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}    set ft=ruby
   au BufNewFile,BufRead *.json set ft=javascript
