@@ -9,9 +9,7 @@ Bundle 'gmarik/vundle'
 Bundle 'taglist.vim'
 Bundle "nathanaelkane/vim-indent-guides"
 Bundle "mileszs/ack.vim"
-Bundle "msanders/cocoa.vim"
 Bundle "scrooloose/nerdcommenter"
-Bundle "fs111/pydoc.vim"
 Bundle "vim-scripts/Gist.vim"
 Bundle "tpope/vim-surround"
 Bundle "Lokaltog/vim-easymotion"    
@@ -30,6 +28,5 @@ Bundle 'Tabular'
 Bundle 'go.vim'
 Bundle 'Conque-Shell'
 Bundle 'bufexplorer.zip'
-Bundle 'pep8'
 Bundle 'fugitive.vim'
 filetype plugin indent on 
