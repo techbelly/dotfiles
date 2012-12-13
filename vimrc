@@ -76,15 +76,6 @@ colorscheme solarized
 
 " }}}
 
-" TabBar {{{
-augroup ft_tablinecolor
-    au!
-    au InsertEnter * hi TabLineFill ctermbg=red ctermfg=196 guifg=#FF3145
-    au InsertLeave * hi TabLineFill ctermbg=0 ctermfg=130 guifg=#CD5907
-augroup END
-hi TabLineFill ctermbg=0 ctermfg=130 guifg=#CD5907
-" }}}
-
 " Statusline {{{
 set statusline=%f    " Path.
 set statusline+=%m   " Modified flag.
@@ -109,7 +100,6 @@ set statusline+=)
 
 " Line and column position and counts.
 set laststatus=2
-set showtabline=2
 " }}}
 
 " Keymappings {{{
@@ -165,9 +155,17 @@ noremap <D-]> >>
 vnoremap <D-[> <gv
 vnoremap <D-]> >gv
 
+nnoremap <leader>n :cn<CR>
+nnoremap <leader>N :cp<CR>
+
+" keep selection after in/outdent
+vnoremap < <gv
+vnoremap > >gv
+
 "Insert a semicolon at the end of a line
 nnoremap <leader>sc mqA;<esc>`q
 
+nnoremap ,z :s/\v([^ ]),([^ ])/\1, \2/g<cr>
 nnoremap <leader><leader> <C-^>
 " }}}
 
@@ -218,7 +216,10 @@ augroup file_settings
         \'pylint --reports=n --output-format=parseable --generated-members=objects,DoesNotExist -d C0111 -d C0301',
         \'\%f:\%l: [\%t\%*[^]]] \%m,\%f:\%l: [\%t] \%m',
         \'Pylint Correct')
-
+  autocmd FileType python call GrepMap(",R",
+        \'./manage.py jtest 2>&1 && echo',
+        \'File \%f, line \%l, in \%m',
+        \'Tests run ok')
   au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}    set ft=ruby
   au BufNewFile,BufRead *.json set ft=javascript
   au BufRead,BufNewFile *.json set filetype=json foldmethod=syntax
@@ -251,7 +252,6 @@ let tlist_objc_settings = 'ObjectiveC;i:interface;c:class;m:method;p:property;I:
 
 " NERDTree ------ {{{
 let g:NERDTreeIgnore=['\.pyc$','\~$']
-noremap <leader>n :NERDTreeToggle<CR>
 let g:NERDTreeChDirMode=2
 augroup nerdtree
   au!
@@ -285,7 +285,7 @@ augroup END
 let g:EasyMotion_mapping_w = '<Leader>m'
 let g:EasyMotion_mapping_W = '<Leader>M'
 let g:EasyMotion_mapping_t = '<Leader>d'
-let g:EasyMotion_mapping_b = '<Leader>z'
+let g:EasyMotion_mapping_b = '<Leader>b'
 " }}}
 
 " Gist-vim --- {{{

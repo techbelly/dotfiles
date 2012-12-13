@@ -29,4 +29,6 @@ Bundle 'go.vim'
 Bundle 'Conque-Shell'
 Bundle 'bufexplorer.zip'
 Bundle 'fugitive.vim'
+Bundle 'Lokaltog/vim-powerline'
+Bundle 'benmills/vimux'
 filetype plugin indent on 
