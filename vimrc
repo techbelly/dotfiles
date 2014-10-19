@@ -3,6 +3,7 @@ set runtimepath+=~/.vim/localfiles/
 source ~/.vim/bundles.vim
 
 " Vim settings {{{
+
 syntax enable                     " Turn on syntax highlighting.
 runtime macros/matchit.vim        " Load the matchit plugin.
 
@@ -44,6 +45,8 @@ set directory=$HOME/.vim/tmp//,.  " Keep swap files in one location
 
 set autoindent
 set expandtab
+
+set laststatus=2                  " Show the status line all the time
 
 set pastetoggle=<F2>
 
@@ -169,34 +172,6 @@ nnoremap ,z :s/\v([^ ]),([^ ])/\1, \2/g<cr>
 nnoremap <leader><leader> <C-^>
 " }}}
 
-" Rails shortcuts {{{
-map <leader>gr :topleft :split config/routes.rb<cr>
-function! ShowRoutes()
-  " Requires 'scratch' plugin
-  :topleft 100 :split __Routes__
-  " Make sure Vim doesn't write __Routes__ as a file
-  :set buftype=nofile
-  " Delete everything
-  :normal 1GdG
-  " Put routes output in buffer
-  :0r! rake -s routes
-  " Size window to number of lines (1 plus rake output length)
-  :exec ":normal " . line("$") . _ "
-  " Move cursor to bottom
-  :normal 1GG
-  " Delete empty trailing line
-  :normal dd
-endfunction
-map <leader>gR :call ShowRoutes()<cr>
-map <leader>gv :CommandTFlush<cr>\|:CommandT app/views<cr>
-map <leader>gc :CommandTFlush<cr>\|:CommandT app/controllers<cr>
-map <leader>gm :CommandTFlush<cr>\|:CommandT app/models<cr>
-map <leader>gh :CommandTFlush<cr>\|:CommandT app/helpers<cr>
-map <leader>gs :CommandTFlush<cr>\|:CommandT spec<cr>
-map <leader>gl :CommandTFlush<cr>\|:CommandT lib<cr>
-map <leader>gp :CommandTFlush<cr>\|:CommandT public<cr>
-map <leader>gg :topleft 100 :split Gemfile<cr>
-" }}}
 
 " Filetypes {{{
 " Automatic fold settings for specific files. Uncomment to use.
@@ -228,15 +203,16 @@ augroup file_settings
 augroup END
 " }}}
 
-" ComMand T {{{
-nnoremap <leader>t :CommandT<CR>
-nnoremap <leader>bb :CommandTBuffer<CR>
-let g:CommandTMatchWindowAtTop=1 " show window at top
-let g:CommandTMaxHeight=20
+" Command T {{{
+"nnoremap <leader>t :CommandT<CR>
+"nnoremap <leader>bb :CommandTBuffer<CR>
+"let g:CommandTMatchWindowAtTop=1 " show window at top
+"let g:CommandTMaxHeight=20
 
-if has("gui_macvim")
-    map <D-t> :CommandT<CR>
-endif
+"if has("gui_macvim")
+    "macmenu &File.New\ Tab key=<nop>
+    "map <D-t> :CommandT<CR>
+"endif
 " }}}
 
 " Tlist {{{
@@ -251,27 +227,27 @@ let tlist_objc_settings = 'ObjectiveC;i:interface;c:class;m:method;p:property;I:
 " }}}
 
 " NERDTree ------ {{{
-let g:NERDTreeIgnore=['\.pyc$','\~$']
-let g:NERDTreeChDirMode=2
-augroup nerdtree
-  au!
-  au VimEnter *  NERDTree
-  au VimEnter * wincmd p
-  au WinEnter * call s:CloseIfOnlyNerdTreeLeft()
-augroup END
+"let g:NERDTreeIgnore=['\.pyc$','\~$']
+"noremap <leader>n :NERDTreeToggle<CR>
+"let g:NERDTreeChDirMode=2
+"augroup nerdtree
+  "au!
+  "au VimEnter *  NERDTree
+  "au VimEnter * wincmd p
+"augroup END
+"autocmd WinEnter * call s:CloseIfOnlyNerdTreeLeft()
 
-" Close all open buffers on entering a window if the only
-" " buffer that's left is the NERDTree buffer
-function! s:CloseIfOnlyNerdTreeLeft()
-  if exists("t:NERDTreeBufName")
-      if bufwinnr(t:NERDTreeBufName) != -1
-          if winnr("$") == 1
-                q
-          endif
-      endif
-  endif
-endfunction
-
+"" Close all open buffers on entering a window if the only
+"" " buffer that's left is the NERDTree buffer
+"function! s:CloseIfOnlyNerdTreeLeft()
+  "if exists("t:NERDTreeBufName")
+      "if bufwinnr(t:NERDTreeBufName) != -1
+          "if winnr("$") == 1
+                "q
+          "endif
+      "endif
+  "endif
+"endfunction
 " }}}
 
 " Vimscript ---------------------- {{{

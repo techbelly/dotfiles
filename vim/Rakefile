@@ -16,9 +16,9 @@ namespace :vim do
     vim_dir = Pathname.new( ENV['HOME'] ) + '.vim' 
     bundle_home = vim_dir + 'bundle'
     sh "rm -rf #{bundle_home}/vundle"
-    sh "git clone http://github.com/gmarik/vundle.git #{bundle_home}/vundle"
-    sh "vim -u #{vim_dir}/bundles.vim +BundleInstall +qa!"
-     
+    sh "rm -rf #{bundle_home}/Vundle.vim"
+    sh "git clone http://github.com/gmarik/Vundle.vim.git #{bundle_home}/Vundle.vim"
+    sh "vim -u #{vim_dir}/bundles.vim +PluginInstall +q"
 
   end # task :bundles
 
