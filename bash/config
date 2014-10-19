@@ -32,9 +32,3 @@ if [ -f "${SSH_ENV}" ]; then
 else
   start_agent;
 fi
-
-export WORKON_HOME=$HOME/.virtualenvs
-export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python
-export PIP_VIRTUALENV_BASE=$WORKON_HOME
-export PIP_RESPECT_VIRTUALENV=true
-source /usr/local/bin/virtualenvwrapper.sh
