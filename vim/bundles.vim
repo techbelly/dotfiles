@@ -30,6 +30,7 @@ Plugin 'bufexplorer.zip'
 Plugin 'fugitive.vim'
 Plugin 'Lokaltog/vim-powerline'
 Plugin 'benmills/vimux'
+Plugin 'tpope/vim-vinegar'
 
 call vundle#end()
 filetype plugin indent on 
