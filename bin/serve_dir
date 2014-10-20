@@ -1,12 +1,31 @@
 #!/usr/bin/env ruby
+port = ARGV[0] || 8003
+['rubygems', 'thin', 'rack', 'socket'].each {|file| require file }
 
-require 'webrick'
-include WEBrick
+module Rack
+  class Cors
+    def initialize(app, opts={}, &block)
+      @app = app
+      if block_given?
+        if block.arity == 1
+          block.call(self)
+        else
+          instance_eval(&block)
+        end
+      end
+    end
 
-s = HTTPServer.new(
-  :Port => 2000,
-  :DocumentRoot => Dir::pwd
-)
+    def call(env)
+      status, headers, body = @app.call env
+      headers['Access-Control-Allow-Origin'] = "http://ben.makie.me:8000"
+      headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,PUT,POST,DELETE'
+      [status, headers, body]
+    end
+  end
+end
 
-trap("INT") { s.shutdown }
-s.start
+Thin::Server.start("0.0.0.0", port) do
+  use Rack::CommonLogger
+  use Rack::Cors 
+  run Rack::Directory.new(Dir.pwd)
+end
