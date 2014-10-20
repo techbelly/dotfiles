@@ -170,6 +170,8 @@ nnoremap <leader>sc mqA;<esc>`q
 
 nnoremap ,z :s/\v([^ ]),([^ ])/\1, \2/g<cr>
 nnoremap <leader><leader> <C-^>
+
+let g:pep8_map='<leader>8'
 " }}}
 
 
@@ -274,6 +276,10 @@ let g:gist_detect_filetype = 1
 let g:gist_open_browser_after_post = 1
 " }}}
 
+" Jedi-vim --- {{{
+let g:jedi#use_tabs_not_buffers = 0
+" }}}
+
 " {{{ Mouse and terminal
 if &term =~ "xterm-256color""
   set t_Co=256
@@ -290,6 +296,23 @@ if has('mouse')
     autocmd BufEnter * set ttymouse=xterm2
   augroup END
 endif"
+" }}}
+
+" Py-mode {{{
+  let g:pymode_breakpoint = 0
+  let g:pymode_rope = 0
+  let g:pymode_virtualenv = 0
+  let g:pymode_run = 0
+  let g:pymode_lint_ignore = "E501"
+" }}}
+
+" Ctags {{{
+nnoremap <f5> :call system('ctags --tag-relative -Rf "'.b:git_dir.'/tags"')<CR>
+
+autocmd BufWritePost *
+      \ if exists('b:git_dir') |
+      \   call system('ctags --tag-relative -R -f "'.b:git_dir.'/tags" &') |
+      \ endif
 " }}}
 
 so $HOME/.temp.vim
