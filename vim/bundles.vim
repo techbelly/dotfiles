@@ -31,6 +31,7 @@ Plugin 'fugitive.vim'
 Plugin 'Lokaltog/vim-powerline'
 Plugin 'benmills/vimux'
 Plugin 'tpope/vim-vinegar'
+Plugin 'tikhomirov/vim-glsl'
 
 call vundle#end()
 filetype plugin indent on 
