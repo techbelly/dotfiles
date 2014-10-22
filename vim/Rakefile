@@ -19,6 +19,7 @@ namespace :vim do
     sh "rm -rf #{bundle_home}/Vundle.vim"
     sh "git clone http://github.com/gmarik/Vundle.vim.git #{bundle_home}/Vundle.vim"
     sh "vim -u #{vim_dir}/bundles.vim +PluginInstall +q"
+    sh "cd bundle/vimproc.vim && make"
 
   end # task :bundles
 
