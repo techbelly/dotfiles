@@ -31,7 +31,7 @@ apt-get -y install \
   libpng-dev\
   libxml2-dev\
   libxslt1-dev\
-  geoip-database\
+  geoip-database-contrib\
   geoip-bin\
   libjpeg8-dev\
   libgeoip-dev\
@@ -54,7 +54,8 @@ apt-get -y install \
   linux-headers-generic\
   dkms\
   curl\
-  mercurial
+  mercurial\
+  libmysqlclient-dev
 
 apt-get -y autoremove
 
