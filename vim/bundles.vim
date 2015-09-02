@@ -12,6 +12,8 @@ Plugin 'Shougo/neomru.vim'
 
 Plugin 'mileszs/ack.vim'
 Plugin 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/syntastic'
+Plugin 'scrooloose/nerdtree'
 
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-git'
@@ -21,13 +23,15 @@ Plugin 'tpope/vim-fugitive'
 
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'vividchalk.vim'
+Plugin 'yuku-t/unite-git'
 
-Plugin 'Lokaltog/vim-powerline'
+Plugin 'bling/vim-airline'
 
 Plugin 'tikhomirov/vim-glsl'
 Plugin 'ujihisa/vim-markdown'
 Plugin 'fatih/vim-go'
 Plugin 'timcharper/textile.vim'
 
+Plugin 'terryma/vim-smooth-scroll'
 call vundle#end()
 filetype plugin indent on 

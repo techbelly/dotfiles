@@ -158,8 +158,8 @@ noremap <D-]> >>
 vnoremap <D-[> <gv
 vnoremap <D-]> >gv
 
-nnoremap <leader>n :cn<CR>
-nnoremap <leader>N :cp<CR>
+nnoremap <leader>n :lnext<CR>
+nnoremap <leader>N :lrewind<CR>
 
 " keep selection after in/outdent
 vnoremap < <gv
@@ -168,12 +168,13 @@ vnoremap > >gv
 "Insert a semicolon at the end of a line
 nnoremap <leader>sc mqA;<esc>`q
 
-nnoremap ,z :s/\v([^ ]),([^ ])/\1, \2/g<cr>
+"Insert spaces after commas
+nnoremap <leader>z :s/\v([^ ]),([^ ])/\1, \2/g<cr>
+
+" Edit alternative file
 nnoremap <leader><leader> <C-^>
 
-let g:pep8_map='<leader>8'
 " }}}
-
 
 " Filetypes {{{
 " Automatic fold settings for specific files. Uncomment to use.
@@ -229,27 +230,26 @@ let tlist_objc_settings = 'ObjectiveC;i:interface;c:class;m:method;p:property;I:
 " }}}
 
 " NERDTree ------ {{{
-"let g:NERDTreeIgnore=['\.pyc$','\~$']
-"noremap <leader>n :NERDTreeToggle<CR>
-"let g:NERDTreeChDirMode=2
-"augroup nerdtree
-  "au!
-  "au VimEnter *  NERDTree
-  "au VimEnter * wincmd p
-"augroup END
-"autocmd WinEnter * call s:CloseIfOnlyNerdTreeLeft()
+let g:NERDTreeIgnore=['\.pyc$','\~$']
+let g:NERDTreeChDirMode=2
+augroup nerdtree
+  au!
+  au VimEnter *  NERDTree
+  au VimEnter * wincmd p
+augroup END
+autocmd WinEnter * call s:CloseIfOnlyNerdTreeLeft()
 
 "" Close all open buffers on entering a window if the only
 "" " buffer that's left is the NERDTree buffer
-"function! s:CloseIfOnlyNerdTreeLeft()
-  "if exists("t:NERDTreeBufName")
-      "if bufwinnr(t:NERDTreeBufName) != -1
-          "if winnr("$") == 1
-                "q
-          "endif
-      "endif
-  "endif
-"endfunction
+function! s:CloseIfOnlyNerdTreeLeft()
+  if exists("t:NERDTreeBufName")
+      if bufwinnr(t:NERDTreeBufName) != -1
+          if winnr("$") == 1
+                q
+          endif
+      endif
+  endif
+endfunction
 " }}}
 
 " Vimscript ---------------------- {{{
@@ -260,10 +260,10 @@ augroup END
 " }}}
 
 " EasyMotion ------------------- {{{
-let g:EasyMotion_mapping_w = '<Leader>m'
-let g:EasyMotion_mapping_W = '<Leader>M'
-let g:EasyMotion_mapping_t = '<Leader>d'
-let g:EasyMotion_mapping_b = '<Leader>b'
+"let g:EasyMotion_mapping_w = '<Leader>m'
+"let g:EasyMotion_mapping_W = '<Leader>M'
+"let g:EasyMotion_mapping_t = '<Leader>d'
+"let g:EasyMotion_mapping_b = '<Leader>b'
 " }}}
 
 " Gist-vim --- {{{
@@ -274,10 +274,6 @@ elseif has("unix")
 endif
 let g:gist_detect_filetype = 1
 let g:gist_open_browser_after_post = 1
-" }}}
-
-" Jedi-vim --- {{{
-let g:jedi#use_tabs_not_buffers = 0
 " }}}
 
 " {{{ Mouse and terminal
@@ -298,12 +294,10 @@ if has('mouse')
 endif"
 " }}}
 
-" Py-mode {{{
-  let g:pymode_breakpoint = 0
-  let g:pymode_rope = 0
-  let g:pymode_virtualenv = 0
-  let g:pymode_run = 0
-  let g:pymode_lint_ignore = "E501"
+" {{{ Airline
+let g:airline_theme="solarized"
+let g:airline_left_sep = ""
+let g:airline_right_sep = ""
 " }}}
 
 " Ctags {{{
@@ -318,11 +312,11 @@ autocmd BufWritePost *
 " Unite.vim {{{
   let g:unite_source_history_yank_enable = 1
   call unite#filters#matcher_default#use(['matcher_fuzzy'])
-  nnoremap <leader>f :<C-u>Unite -no-split -buffer-name=files   -start-insert file_rec/async:!<cr>
+  nnoremap <leader>f :<C-u>Unite -no-split -buffer-name=files   -start-insert git_cached<cr>
+  nnoremap <leader>g :<C-u>Unite -no-split -buffer-name=files git_modified<cr>
+  nnoremap <leader>m :<C-u>Unite -no-split -buffer-name=files git_untracked<cr>
   " nnoremap <leader>f :<C-u>Unite -no-split -buffer-name=files   -start-insert file<cr>
   nnoremap <leader>r :<C-u>Unite -no-split -buffer-name=mru     -start-insert file_mru<cr>
-  nnoremap <leader>o :<C-u>Unite -no-split -buffer-name=outline -start-insert outline<cr>
-  nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank    history/yank<cr>
   nnoremap <leader>e :<C-u>Unite -no-split -buffer-name=buffer  buffer<cr>
 
   " Custom mappings for the unite buffer
@@ -333,5 +327,24 @@ autocmd BufWritePost *
     imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
   endfunction
 " }}}
+
+" Syntactic {{{
+
+let g:syntastic_python_checkers = ['pylint', 'pep8']
+let g:syntastic_aggregate_errors = 1
+let g:syntastic_python_pylint_args = '--rcfile='.$HOME.'/.pylintrc' 
+let g:syntastic_check_on_open = 1
+let g:syntastic_auto_loc_list = 1 
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_enable_signs = 1
+" }}}
+
+" Smooth-scroll {{{
+noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 2)<CR>
+noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 2)<CR>
+noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
+noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
+" }}}
+
 so $HOME/.temp.vim
 so $HOME/.local.vim

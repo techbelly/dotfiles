@@ -17,4 +17,4 @@ Dir.chdir File.dirname(__FILE__) do
   end
 end
 
-`cd vim && rake`
+`cd vim && rake vim:bootstrap`

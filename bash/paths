@@ -34,6 +34,5 @@ if [ -d ~/appengine-java-sdk ]; then
 fi
 
 if [ -d ~/.rbenv ]; then
-  export PATH=~/.rbenv/bin:~/.rbenv/plugins/rubybuild/bin:$PATH
   eval "$(rbenv init -)"
 fi
