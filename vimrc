@@ -1,6 +1,19 @@
 
-set runtimepath+=~/.vim/localfiles/
-source ~/.vim/bundles.vim
+" set runtimepath+=~/.vim/localfiles/
+" source ~/.vim/bundles.vim
+
+" Syntax {{{
+" Highlight tabs (if expandtab is set)
+
+autocmd BufNewFile,BufReadPost *
+  \ if &expandtab |
+  \   syn match Tab "\t" |
+  \ endif
+
+" Highlight whitespace errors
+autocmd BufNewFile,BufReadPost * syn match TrailingWS "\s\+$"
+
+" }}}
 
 " Vim settings {{{
 
@@ -66,6 +79,9 @@ set tabstop=2
 set softtabstop=2
 set smarttab
 
+" }}}
+
+" Theming {{{
 syntax on
 
 augroup BgHighlight
@@ -73,9 +89,11 @@ augroup BgHighlight
     autocmd WinEnter * set cursorline
     autocmd WinLeave * set nocursorline
 augroup END 
-
-set background=dark
-colorscheme solarized
+set background=light
+colorscheme solarized 
+let g:solarized_termcolors=256
+let g:solarized_termtrans =16
+let g:solarized_contrast = "high"
 
 " }}}
 
@@ -114,13 +132,14 @@ nnoremap k gk
 nnoremap <leader>a :Ack 
 
 inoremap jk <esc>
+inoremap § <esc>
 
+" select a buffer
+nnoremap <leader>b :ls<cr>:b<space>
 
 " Emacs Heresy
 inoremap <C-a> <esc>I
 inoremap <C-e> <esc>A
-
-cmap w!! w !sudo tee % >/dev/null
 
 nnoremap <leader>w <C-w>v<C-w>l
 nnoremap <C-h> <C-w>h
@@ -135,9 +154,6 @@ noremap <space> /
 noremap <c-space> ?
 
 nnoremap <leader><space> :noh<cr>
-
-" map ; :
-" noremap ;; ;
 
 nnoremap <silent> <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<cr>
 nnoremap <silent> <leader>eb <C-w><C-v><C-l>:e $HOME/.vim/bundles.vim<cr>
@@ -167,6 +183,9 @@ vnoremap > >gv
 
 "Insert a semicolon at the end of a line
 nnoremap <leader>sc mqA;<esc>`q
+
+"Remove trailing whitespace
+nnoremap <leader>ws :s/\s\+$//e<CR>
 
 "Insert spaces after commas
 nnoremap <leader>z :s/\v([^ ]),([^ ])/\1, \2/g<cr>
@@ -201,43 +220,21 @@ augroup file_settings
   au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}    set ft=ruby
   au BufNewFile,BufRead *.json set ft=javascript
   au BufRead,BufNewFile *.json set filetype=json foldmethod=syntax
-  au FileType json command -range=% -nargs=* Tidy <line1>,<line2>! json_xs -f json -t json-pretty
   au BufRead,BufNewFile *.go set filetype=go
 augroup END
 " }}}
 
-" Command T {{{
-"nnoremap <leader>t :CommandT<CR>
-"nnoremap <leader>bb :CommandTBuffer<CR>
-"let g:CommandTMatchWindowAtTop=1 " show window at top
-"let g:CommandTMaxHeight=20
-
-"if has("gui_macvim")
-    "macmenu &File.New\ Tab key=<nop>
-    "map <D-t> :CommandT<CR>
-"endif
-" }}}
-
-" Tlist {{{
-nnoremap <leader>l :TlistToggle<CR>
-let Tlist_Use_Right_Window = 1 
-let Tlist_Show_One_File = 1
-let Tlist_Exit_OnlyWindow = 1
-let Tlist_Use_SingleClick = 1
-let Tlist_GainFocus_On_ToggleOpen = 1
-let Tlist_Close_On_Select = 1
-let tlist_objc_settings = 'ObjectiveC;i:interface;c:class;m:method;p:property;I:implementation'
-" }}}
-
 " NERDTree ------ {{{
-let g:NERDTreeIgnore=['\.pyc$','\~$']
-let g:NERDTreeChDirMode=2
-augroup nerdtree
-  au!
-  au VimEnter *  NERDTree
-  au VimEnter * wincmd p
-augroup END
-autocmd WinEnter * call s:CloseIfOnlyNerdTreeLeft()
+if has('nerdtree')
+  let g:NERDTreeIgnore=['\.pyc$','\~$']
+  let g:NERDTreeChDirMode=2
+  augroup nerdtree
+    au!
+    au VimEnter *  NERDTree
+    au VimEnter * wincmd p
+  augroup END
+  autocmd WinEnter * call s:CloseIfOnlyNerdTreeLeft()
+endif
 
 "" Close all open buffers on entering a window if the only
 "" " buffer that's left is the NERDTree buffer
@@ -259,13 +256,6 @@ augroup filetype_vim
 augroup END
 " }}}
 
-" EasyMotion ------------------- {{{
-"let g:EasyMotion_mapping_w = '<Leader>m'
-"let g:EasyMotion_mapping_W = '<Leader>M'
-"let g:EasyMotion_mapping_t = '<Leader>d'
-"let g:EasyMotion_mapping_b = '<Leader>b'
-" }}}
-
 " Gist-vim --- {{{
 if has("mac")
   let g:gist_clip_command = 'pbcopy'
@@ -277,11 +267,12 @@ let g:gist_open_browser_after_post = 1
 " }}}
 
 " {{{ Mouse and terminal
-if &term =~ "xterm-256color""
-  set t_Co=256
-  set t_SI = "\<Esc>]12;purple\x7"
-  set t_EI = "\<Esc>]12;blue\x7"
-endif
+set term=builtin_ansi
+set t_Co=256
+" "if &term =~ "xterm-256color""
+"   set t_SI = "\<Esc>]12;purple\x7"
+"   set t_EI = "\<Esc>]12;blue\x7"
+" endif
 
 if has('mouse')
   set mouse=a
@@ -310,22 +301,24 @@ autocmd BufWritePost *
 " }}}
 
 " Unite.vim {{{
-  let g:unite_source_history_yank_enable = 1
-  call unite#filters#matcher_default#use(['matcher_fuzzy'])
-  nnoremap <leader>f :<C-u>Unite -no-split -buffer-name=files   -start-insert git_cached<cr>
-  nnoremap <leader>g :<C-u>Unite -no-split -buffer-name=files git_modified<cr>
-  nnoremap <leader>m :<C-u>Unite -no-split -buffer-name=files git_untracked<cr>
-  " nnoremap <leader>f :<C-u>Unite -no-split -buffer-name=files   -start-insert file<cr>
-  nnoremap <leader>r :<C-u>Unite -no-split -buffer-name=mru     -start-insert file_mru<cr>
-  nnoremap <leader>e :<C-u>Unite -no-split -buffer-name=buffer  buffer<cr>
+  if has('unite')
+    call unite#filters#matcher_default#use(['matcher_fuzzy'])
+    let g:unite_source_history_yank_enable = 1
+    nnoremap <leader>f :<C-u>Unite -no-split -buffer-name=files   -start-insert git_cached<cr>
+    nnoremap <leader>g :<C-u>Unite -no-split -buffer-name=files git_modified<cr>
+    nnoremap <leader>m :<C-u>Unite -no-split -buffer-name=files git_untracked<cr>
+    " nnoremap <leader>f :<C-u>Unite -no-split -buffer-name=files   -start-insert file<cr>
+    nnoremap <leader>r :<C-u>Unite -no-split -buffer-name=mru     -start-insert file_mru<cr>
+    nnoremap <leader>e :<C-u>Unite -no-split -buffer-name=buffer  buffer<cr>
 
-  " Custom mappings for the unite buffer
-  autocmd FileType unite call s:unite_settings()
-  function! s:unite_settings()
-    " Enable navigation with control-j and control-k in insert mode
-    imap <buffer> <C-j>   <Plug>(unite_select_next_line)
-    imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
-  endfunction
+    " Custom mappings for the unite buffer
+    autocmd FileType unite call s:unite_settings()
+    function! s:unite_settings()
+      " Enable navigation with control-j and control-k in insert mode
+      imap <buffer> <C-j>   <Plug>(unite_select_next_line)
+      imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
+    endfunction
+  endif 
 " }}}
 
 " Syntactic {{{
@@ -340,11 +333,32 @@ let g:syntastic_enable_signs = 1
 " }}}
 
 " Smooth-scroll {{{
-noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 2)<CR>
-noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 2)<CR>
-noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
-noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
+if has('smooth_scroll')
+  noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 2)<CR>
+  noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 2)<CR>
+  noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
+  noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
+endif
 " }}}
 
-so $HOME/.temp.vim
-so $HOME/.local.vim
+" Linting {{{
+let g:ale_linters = {
+\   'javascript': ['eslint'],
+\}
+let g:ale_fixers = {
+\   'javascript': ['eslint'],
+\}
+" }}}
+
+" Fuzzy Finder {{{
+set rtp+=/usr/local/opt/fzf
+nnoremap <leader>f :FZF<CR>
+" }}}
+
+" Ag / Ack {{{
+if executable("ag") 
+  let g:ackprg="ag --nogroup --nocolor --column" 
+  set grepprg=ag\ --vimgrep\ $* 
+  set grepformat=%f:%l%c%m 
+endif
+" }}}
