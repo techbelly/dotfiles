@@ -67,6 +67,18 @@ filetype plugin on
 
 " }}}
 
+" Plugins {{{
+call plug#begin()
+Plug 'sonph/onehalf', { 'rtp': 'vim' }
+Plug 'pangloss/vim-javascript'
+Plug 'vim-airline/vim-airline.git'
+Plug 'dense-analysis/ale.git'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'altercation/vim-colors-solarized'
+Plug 'vimwiki/vimwiki.git'
+call plug#end()
+" }}}
+"
 " Syntax {{{
 " Highlight tabs (if expandtab is set)
 
@@ -92,7 +104,11 @@ augroup BgHighlight
     autocmd WinLeave * set nocursorline
 augroup END 
 
-set term=xterm-256color
+set background=dark
+set t_Co=256
+set cursorline
+colorscheme onehalfdark
+
 " }}}
 
 " Keymappings {{{
@@ -207,7 +223,7 @@ endif"
 " }}}
 
 " {{{ Airline
-let g:airline_theme="solarized"
+let g:airline_theme='onehalfdark'
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#ale#enabled = 1
 " }}}
@@ -251,3 +267,4 @@ endif
 nnoremap <silent> <leader>r :term bundle exec rspec %<cr>
 nnoremap <silent> <leader>R :term bundle exec rake<cr>
 " }}}
+
