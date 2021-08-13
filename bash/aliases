@@ -44,6 +44,10 @@ cdf()
     cd "$currFolderPath"
 }
 
+catmd()
+{
+  pandoc $1 | lynx -stdin
+}
 
 # cd
 alias ..='cd ..'
@@ -70,12 +74,8 @@ alias sc='script/console'
 alias ss='script/server'
 alias tlog='tail -f log/development.log'
 alias migrate='rake db:migrate db:test:clone'
-
-alias techbelly='ssh beerscope@www.techbelly.com'
+alias be='bundle exec'
 
 alias lsock='sudo /usr/sbin/lsof -i -P'
-
-alias sshwm='ssh -F ~/.ssh/wmob_config'
-alias scpwm='scp -F ~/.ssh/wmob_config'
 
 alias dsrm="find . -type f -name .DS_Store -print0 | xargs -0 rm"

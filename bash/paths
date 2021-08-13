@@ -11,10 +11,6 @@ fi
 if [ -d $HOME/bin ]; then
   export PATH=$HOME/bin:$PATH
 fi
-
-if [ -d  ~/.gem/ruby/1.8/bin ]; then
-  export PATH=~/.gem/ruby/1.8/bin:$PATH
-fi
  
 if [ -d $GIT_HOME ]; then
   export PATH=$PATH:$GIT_HOME/bin
@@ -27,10 +23,6 @@ export NODE_PATH=$NODE_PATH:/usr/local/lib/node_modules
 
 if [ -d /usr/local/share/npm/bin ]; then
    export PATH=/usr/local/share/npm/bin:$PATH
-fi
-
-if [ -d ~/appengine-java-sdk ]; then
-	export PATH=$PATH:$HOME/appengine-java-sdk/bin
 fi
 
 if [ -d ~/.rbenv ]; then

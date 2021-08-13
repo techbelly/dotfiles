@@ -63,6 +63,8 @@ set tabstop=2
 set softtabstop=2
 set smarttab
 
+filetype plugin on
+
 " }}}
 
 " Syntax {{{
@@ -91,7 +93,6 @@ augroup BgHighlight
 augroup END 
 
 set term=xterm-256color
-colorscheme flattened_dark
 " }}}
 
 " Keymappings {{{
@@ -112,7 +113,7 @@ nnoremap <leader>b :ls<cr>:b<space>
 inoremap <C-a> <esc>I
 inoremap <C-e> <esc>A
 
-nnoremap <leader>w <C-w>v<C-w>l
+nnoremap <leader>m <C-w>v<C-w>l
 nnoremap <C-h> <C-w>h
 nnoremap <C-k> <C-w>k
 nnoremap <C-j> <C-w>j
@@ -178,13 +179,20 @@ augroup file_settings
   au FileType vim setlocal foldmethod=marker foldenable
 
   au BufNewFile,BufRead *.json set ft=javascript
+  au BufNewFile,BufRead *.js set ft=javascript
+  au BufNewFile,BufRead *.jsx set ft=javascript
   au BufRead,BufNewFile *.json set filetype=json foldmethod=syntax
   au BufRead,BufNewFile *.go set filetype=go
   au BufNewFile,BufReadPost *.md set filetype=markdown
+  au BufRead,BufNewFile *.html let g:ale_fix_on_save=1 
+  au BufRead,BufNewFile *.js let g:ale_fix_on_save=1 
+  au BufRead,BufNewFile *.jsx let g:ale_fix_on_save=1 
+  au BufRead,BufNewFile *.jsx let g:ale_fixers = {'javascript': ['prettier', 'eslint'] }
   au BufRead,BufNewFile *.elm let g:ale_fix_on_save=1 
   au BufRead,BufNewFile *.elm let g:ale_fixers= { 'elm': ['elm-format'] }
 augroup END
 " }}}
+
 
 " {{{ Mouse and terminal
 if has('mouse')
@@ -219,10 +227,10 @@ endif
 
 " Linting {{{
 let g:ale_linters = {
-\   'javascript': ['eslint'],
+\   'javascript': ['eslint', 'prettier'],
 \}
 let g:ale_fixers = {
-\   'javascript': ['eslint'],
+\   'javascript': ['eslint', 'prettier'],
 \}
 " }}}
 
