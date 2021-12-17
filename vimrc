@@ -7,6 +7,7 @@ runtime macros/matchit.vim        " Load the matchit plugin.
 set showcmd                       " Display incomplete commands.
 set showmode                      " Display the mode you're in.
 
+set nomodeline
 set backspace=indent,eol,start    " Intuitive backspacing.
 set nofoldenable
 set hidden                        " Handle multiple buffers better.
@@ -70,12 +71,12 @@ filetype plugin on
 " Plugins {{{
 call plug#begin()
 Plug 'sonph/onehalf', { 'rtp': 'vim' }
-Plug 'pangloss/vim-javascript'
-Plug 'vim-airline/vim-airline.git'
-Plug 'dense-analysis/ale.git'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'altercation/vim-colors-solarized'
-Plug 'vimwiki/vimwiki.git'
+Plug 'vim-airline/vim-airline'
+Plug 'dense-analysis/ale'
+Plug 'vimwiki/vimwiki'
+Plug 'yuezk/vim-js'
+Plug 'maxmellon/vim-jsx-pretty'
+Plug 'mileszs/ack.vim'
 call plug#end()
 " }}}
 "
@@ -91,7 +92,7 @@ autocmd BufNewFile,BufReadPost *
 autocmd BufNewFile,BufReadPost * syn match TrailingWS "\s\+$"
 
 " Strip whitespace
-autocmd FileType elm,ruby,rb,py autocmd BufWritePre <buffer> %s/\s\+$//e
+autocmd FileType elm,ruby,rb,py,js,jsx autocmd BufWritePre <buffer> %s/\s\+$//e
 
 " }}}
 
@@ -105,10 +106,14 @@ augroup BgHighlight
 augroup END 
 
 set background=dark
-set t_Co=256
 set cursorline
 colorscheme onehalfdark
 
+if exists('+termguicolors')
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
 " }}}
 
 " Keymappings {{{
@@ -117,7 +122,7 @@ colorscheme onehalfdark
 nnoremap j gj
 nnoremap k gk
 
-nnoremap <leader>a :Ack 
+nnoremap <leader>a :Ack!<Space>
 
 inoremap jk <esc>
 inoremap § <esc>
@@ -129,7 +134,7 @@ nnoremap <leader>b :ls<cr>:b<space>
 inoremap <C-a> <esc>I
 inoremap <C-e> <esc>A
 
-nnoremap <leader>m <C-w>v<C-w>l
+nnoremap <leader>w <C-w>v<C-w>l
 nnoremap <C-h> <C-w>h
 nnoremap <C-k> <C-w>k
 nnoremap <C-j> <C-w>j
@@ -172,7 +177,7 @@ vnoremap > >gv
 nnoremap <leader>sc mqA;<esc>`q
 
 "Remove trailing whitespace
-nnoremap <leader>ws :s/\s\+$//e<CR>
+nnoremap <leader>s :s/\s\+$//e<CR>
 
 "Insert spaces after commas
 nnoremap <leader>z :s/\v([^ ]),([^ ])/\1, \2/g<cr>
@@ -180,6 +185,42 @@ nnoremap <leader>z :s/\v([^ ]),([^ ])/\1, \2/g<cr>
 " Edit alternative file
 nnoremap <leader><leader> <C-^>
 
+" }}}
+
+" {{{ Vim wiki
+" Remap global vimeiki commands 
+nmap <Leader>xw <Plug>VimwikiIndex
+nmap <Leader>xt <Plug>VimwikiTabIndex
+nmap <Leader>xs <Plug>VimwikiUISelect
+nmap <Leader>xi <Plug>VimwikiDiaryIndex
+nmap <Leader>x<Leader>i <Plug>VimwikiDiaryGenerateLinks
+nmap <Leader>x<Leader>w <Plug>VimwikiMakeDiaryNote
+nmap <Leader>x<Leader>t <Plug>VimwikiTabMakeDiaryNote
+nmap <Leader>x<Leader>y <Plug>VimwikiMakeYesterdayDiaryNote
+nmap <Leader>x<Leader>m <Plug>VimwikiMakeTomorrowDiaryNote
+
+let g:vimwiki_list = [
+      \ {'path' : '~/wiki',
+      \  'path_html' : '~/wiki_site',
+      \  'auto_export' : 1,
+      \  'auto_toc' : 1,
+      \  'auto_diary_index' : 1,
+      \ },
+      \ {'path' : '~/Dropbox/wiki',
+      \  'path_html' : '~/Dropbox/wiki_site',
+      \  'auto_export' : 1,
+      \  'auto_toc' : 1,
+      \  'auto_diary_index' : 1,
+      \ }
+      \ ]
+    
+let g:vimwiki_hl_headers = 1
+let g:vimwiki_toc_header_level = 2
+augroup wiki_settings
+  au!
+  au FileType vimwiki setlocal textwidth=80 linebreak
+  au FileType vimwiki highlight Underlined cterm=underline 
+augroup END
 " }}}
 
 " Filetypes {{{
@@ -209,8 +250,8 @@ augroup file_settings
 augroup END
 " }}}
 
-
 " {{{ Mouse and terminal
+if !has('nvim')
 if has('mouse')
   set mouse=a
   augroup mouse_settings 
@@ -219,7 +260,9 @@ if has('mouse')
     autocmd FocusGained * set ttymouse=xterm2
     autocmd BufEnter * set ttymouse=xterm2
   augroup END
-endif"
+endif
+endif
+"
 " }}}
 
 " {{{ Airline
