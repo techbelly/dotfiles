@@ -17,4 +17,11 @@ Dir.chdir File.dirname(__FILE__) do
   end
 end
 
+puts("Installing homebrew")
 
+install = <<EOF
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+EOF
+
+system(install)
+system("brew bundle --global")
