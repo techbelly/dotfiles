@@ -1,9 +1,16 @@
-echo "Running ~/.profile"
+export BASH_SILENCE_DEPRECATION_WARNING=1
 
+echo "Running ~/.bash_profile"
+
+echo "Loading ~/.bash/config"
 source ~/.bash/config
+echo "Loading ~/.bash/paths"
 source ~/.bash/paths
+echo "Loading ~/.bash/aliases"
 source ~/.bash/aliases
+echo "Loading ~/.bash/completions"
 source ~/.bash/completions
+echo "Loading ~/.bash/prompt"
 source ~/.bash/prompt
 
 if [ -f ~/.bashrc ]; then
