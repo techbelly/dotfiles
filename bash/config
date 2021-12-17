@@ -5,7 +5,7 @@ export EDITOR='vim'
 export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad
 
-if [ -d /usr/local/git ]; then
+if type git &>/dev/null; then
   export GIT_HOME=/usr/local/git
 fi
 

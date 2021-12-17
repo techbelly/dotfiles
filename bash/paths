@@ -25,6 +25,6 @@ if [ -d /usr/local/share/npm/bin ]; then
    export PATH=/usr/local/share/npm/bin:$PATH
 fi
 
-if [ -d ~/.rbenv ]; then
+if type rbenv &>/dev/null; then
   eval "$(rbenv init -)"
 fi
