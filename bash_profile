@@ -50,12 +50,5 @@ if type asdf &>/dev/null; then
   source /usr/local/opt/asdf/asdf.sh
 fi
 
-if type brew &>/dev/null; then
-  cd ~/Projects/dotfiles
-  echo "Checking for outdated homebrew packages"
-  brew outdated
-  echo "Checking for homebrew packages not in Brewfile"
-  brew bundle check
-  brew bundle cleanup
-  cd ~
-fi
+echo "Checking homebrew bundle"
+runonce update_brew 
